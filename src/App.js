@@ -1,58 +1,46 @@
-import { useState } from "react";
+import {useState} from "react";
+import Board from "./Board";
 
-function Square({ value, onSquareClick }) {
-  return (
-    <button className="square" onClick={onSquareClick}>
-      {value}
-    </button>
-  );
-}
+export default function Game() {
+  const [xIsNext, setXIsNext] = useState(true);
+  const [history, setHistory] = useState([Array(9).fill(null)]);
+  const [currentMove, setCurrentMove] = useState(0);
+  const currentSquares = history[currentMove];
 
-export default function Board() {
-  const [squares, setSquares] = useState(Array(9).fill(null));
-
-  function handleClick(i) {
-    // Arrays.prototype.slice() 返回一个新的数组
-    const nextSquares = squares.slice();
-    nextSquares[i] = "X";
-    // 闭包
-    setSquares(nextSquares);
+  function handlePlay(nextSquares) {
+    const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
+    setHistory(nextHistory);
+    setCurrentMove(nextHistory.length - 1);
+    setXIsNext(!xIsNext);
   }
 
-  return (
-    <>
-      <div className="board-row">
-        <Square
-          value={squares[0]}
-          // onXxxx 表示代表事件的 props
-          // handleXxx 表示处理事件的函数
-          onSquareClick={() => {
-            handleClick(0);
-          }}
-        />
-        <Square
-          value={squares[1]}
-          onSquareClick={() => {
-            handleClick(1);
-          }}
-        />
-        <Square
-          value={squares[2]}
-          onSquareClick={() => {
-            handleClick(2);
-          }}
-        />
+  function jumpTo(nextMove) {
+    setCurrentMove(nextMove);
+    setXIsNext(nextMove % 2 === 0);
+  }
+
+  const moves = history.map((squares, move) => {
+    let description;
+    if (move > 0) {
+      description = 'Go to move #' + move;
+    } else {
+      description = 'Go to game start';
+    }
+    return (
+      <li key={move}>
+        <button onClick={() => jumpTo(move)}>{description}</button>
+      </li>
+    );
+  });
+
+  return (<>
+    <div className="game">
+      <div className="game-board">
+        <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay}/>
       </div>
-      <div className="board-row">
-        <Square />
-        <Square />
-        <Square />
+      <div className="game-info">
+        <ol>{moves}</ol>
       </div>
-      <div className="board-row">
-        <Square />
-        <Square />
-        <Square />
-      </div>
-    </>
-  );
-}
+    </div>
+  </>);
+};
