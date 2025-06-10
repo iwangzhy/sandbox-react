@@ -2,9 +2,13 @@ import {useState} from "react";
 import Board from "./Board";
 
 export default function Game() {
+    // 下一步是不是 X
     const [xIsNext, setXIsNext] = useState(true);
+    // 操作历史记录
     const [history, setHistory] = useState([Array(9).fill(null)]);
+    // 当前快照索引
     const [currentMove, setCurrentMove] = useState(0);
+    // 快照
     const currentSquares = history[currentMove];
 
     function handlePlay(nextSquares) {
@@ -19,16 +23,18 @@ export default function Game() {
         setXIsNext(nextMove % 2 === 0);
     }
 
-    const moves = history.map((squares, move) => {
-        let description;
-        if (move > 0) {
-            description = 'Go to move #' + move;
-        } else {
-            description = 'Go to game start';
-        }
+    const moves = history.map((_, move) => {
         return (
+            // key 必须
             <li key={move}>
-                <button onClick={() => jumpTo(move)}>{description}</button>
+                {/*点击跳转到指定步骤*/}
+                <button onClick={() => jumpTo(move)}>
+                    {
+                        move > 0
+                            ? 'Go to move #' + move
+                            : 'Go to game start'
+                    }
+                </button>
             </li>
         );
     });
