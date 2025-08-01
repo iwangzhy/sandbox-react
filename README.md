@@ -92,3 +92,54 @@ export default function App() {
 
 **内联 style 样式使用驼峰命名** `<ul style={{ backgroundColor: 'black' }}>`
 
+## 将 Props 传递给组件
+
+React 组件通过使用 props 来互相通信。
+
+给子组件传递 props (写法类似于 html 标签的属性)
+
+```jsx
+export default function Profile() {
+    return (
+        <Avatar
+            person={{name: 'xxx', imageId: 'id'}}
+            {/*这里使用大括号的原因是， size 是一个数值型，如果使用双引号，则表示size 是一个字符串*/}
+            size={100}
+        />
+    );
+}
+```
+
+在子组件中读取 props
+
+```jsx
+// 这里使用到了解构语法
+// 解构语法将数组中的值或对象的属性取出，赋值给其他变量
+// const arr = [1, 2, 3];
+// const [a, b, c] = arr; // a = 1, b = 2, c = 3 // 数组解构
+// const obj = {x: 1, y: 2};
+// const {x, y} = obj; // x = 1, y = 2 // 对象解构
+// https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Destructuring#Unpacking_fields_from_objects_passed_as_a_function_parameter
+function Avatar({person, size}) {
+    return (
+        <img
+            className="avatar"
+            src={getImageUrl(person)}
+            alt={person.name}
+            width={size}
+            height={size}
+        />
+    );
+}
+```
+
+给 props 设置默认值
+
+```jsx
+function Avatar({person, size = 50}) {
+    // ...
+}
+```
+
+展开语法： `...props`
+
