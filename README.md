@@ -195,3 +195,64 @@ return <li className="item">
 ```
 
 **切勿将数字放在 && 左侧**
+
+## 渲染列表
+
+```jsx
+const listItems = people.map(person => <li key={Math.random()}>{person}</li>);
+return <ul>{listItems}</ul>;
+```
+
+**箭头函数的用法：**
+
+1. 箭头函数后面跟着小括号 `()` 时，隐式
+
+```jsx
+const listItems = chemists.map(person =>
+    <li>...</li> // 隐式地返回！
+);
+```
+
+2. 箭头函数后面跟着大括号 `{}` 时，必须使用 `return` 语句来返回值。
+
+```jsx
+const listItems = chemists.map(person => { // 花括号， 块函数体
+    return <li>...</li>;
+});
+```
+
+**用 key 保持列表项的顺序**
+
+Warning: Each child in a list should have a unique “key” prop.
+
+使用 `key` 属性来标识每个列表项的唯一性，`key` 只在 React 内部使用，不会传递给组件。
+
+```jsx
+<li key={person.id}>...</li>
+```
+
+> 直接放在 map() 方法里的 JSX 元素一般都需要指定 key 值！
+
+Fragment 标签, 用于包裹多个元素而不添加额外的 DOM 元素。
+
+使用 Fragment 语法（通常写作 <> </>）来包裹 JSX 节点可以避免引入额外的 <div> 元素！
+
+```jsx
+import {Fragment} from 'react';
+
+// ...
+
+const listItems = people.map(person =>
+    <Fragment key={person.id}>
+        <h1>{person.name}</h1>
+        <p>{person.bio}</p>
+    </Fragment>
+);
+```
+
+key 需要满足的条件
+
+- key 值在兄弟节点之间必须是唯一的。
+- key 值不能改变。
+
+不要把数组的索引下标和 `Math.random()` 作为 key 值。 否则会是组件渲染时，使得所有的组件和 DOM 元素每次都要重新创建。有性能问题。

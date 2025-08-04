@@ -1,8 +1,9 @@
 import './App.css'
-import PackingList from "./components/PackingList.tsx";
+import {Chemist} from "./components/Chemist.tsx";
+
 
 function App() {
-    return <PackingList/>
+    return <Chemist/>;
 }
 
 export default App
