@@ -133,7 +133,9 @@ function Avatar({person, size}) {
 }
 ```
 
-给 props 设置默认值
+**对象解构使用 `{}`, 数组解构使用 `[]`**
+
+给 props 设置默认值, 默认值仅在没有传递该 props 或该 `props=undefined` 时生效。
 
 ```jsx
 function Avatar({person, size = 50}) {
@@ -142,4 +144,8 @@ function Avatar({person, size = 50}) {
 ```
 
 展开语法： `...props`
+
+一个组件可能会随着时间的推移收到不同的 props。**props 是不可变的,每次渲染都会收到新版本的 props，不要尝试“更改props”**。
+
+需要交互性是，可以使用`setState` 来更新组件的状态。
 

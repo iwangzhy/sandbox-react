@@ -1,27 +1,34 @@
 import './App.css'
-import Gallery from "./Gallery.tsx";
+import {useEffect, useState} from "react";
+import {Clock} from "./components/Clock.tsx";
+
+function useTime() {
+    const [time, setTime] = useState(() => new Date());
+    useEffect(() => {
+        const id = setInterval(() => {
+            setTime(new Date());
+        }, 100);
+        return () => clearInterval(id);
+    }, []);
+    return time;
+}
 
 function App() {
+    const time = useTime();
+    const [color, setColor] = useState('lightcoral');
     return (
-        <Gallery/>
+        <div>
+            <p>
+                选择一个颜色:{' '}
+                <select value={color} onChange={e => setColor(e.target.value)}>
+                    <option value="lightcoral">浅珊瑚色</option>
+                    <option value="midnightblue">午夜蓝</option>
+                    <option value="rebeccapurple">丽贝卡紫</option>
+                </select>
+            </p>
+            <Clock color={color} time={time.toLocaleTimeString()}/>
+        </div>
     )
 }
 
 export default App
-
-
-const today = new Date();
-
-function formatDate(date: Date) {
-    return new Intl.DateTimeFormat(
-        'zh-CN',
-        {
-            weekday: 'long'
-        }
-    ).format(date);
-}
-
-export function TodoList() {
-    const name = "wangzhy";
-    return <h1>{name} To Do List for {formatDate(today)}</h1>
-}

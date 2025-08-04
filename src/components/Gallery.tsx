@@ -1,13 +1,6 @@
-// 具名导出
-export function Profile() {
-    return (
-        <img src="https://i.imgur.com/MK3eW3As.jpg"
-             alt="Katherine Johnson"
-        />
-    );
-}
-
 // 默认导出
+import Profile from "./Profile.tsx";
+
 export default function Gallery() {
     return (
         <section>
