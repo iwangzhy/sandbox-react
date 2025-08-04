@@ -11,14 +11,15 @@ React **组件的名称必须大写**
 标签和 return 不再一行，则必须使**用括号包裹**。
 
 ```tsx
-return <img src="https://i.imgur.com/MK3eW3As.jpg" alt="Katherine Johnson"/>;
+return <img src="https://i.imgur.com/MK3eW3As.jpg" alt="Katherine Johnson" />;
 ```
 
 ```tsx
-return ( // 标签与 return 关键字不在同一行，需要使用括号包裹
-    <div>
-        <img src="https://i.imgur.com/MK3eW3As.jpg" alt="Katherine Johnson"/>
-    </div>
+return (
+  // 标签与 return 关键字不在同一行，需要使用括号包裹
+  <div>
+    <img src="https://i.imgur.com/MK3eW3As.jpg" alt="Katherine Johnson" />
+  </div>
 );
 ```
 
@@ -36,7 +37,7 @@ Next.js 框架的根组件定义在 `pages/index.js` 文件中。
 
 **一个文件中，有且仅有一个默认导出，0或多个具名导出**
 
-默认导入：`import Button from './Button'`  **不需要大括号**
+默认导入：`import Button from './Button'` **不需要大括号**
 
 具名导入：`import { Button } from './Button'` **需要大括号，按需导入**
 
@@ -69,7 +70,13 @@ JSX 转化器： [https://transform.tools/html-to-jsx](https://transform.tools/h
 
 ```jsx
 export default function App() {
-    return <img className="avatar" src="https://i.imgur.com/MK3eW3As.jpg" alt="Katherine Johnson"/>
+  return (
+    <img
+      className="avatar"
+      src="https://i.imgur.com/MK3eW3As.jpg"
+      alt="Katherine Johnson"
+    />
+  );
 }
 ```
 
@@ -77,9 +84,9 @@ export default function App() {
 
 ```jsx
 export default function App() {
-    const src = "https://i.imgur.com/MK3eW3As.jpg";
-    const alt = "Katherine Johnson";
-    return <img className="avatar" src={src} alt={alt}/>;
+  const src = "https://i.imgur.com/MK3eW3As.jpg";
+  const alt = "Katherine Johnson";
+  return <img className="avatar" src={src} alt={alt} />;
 }
 ```
 
@@ -120,16 +127,16 @@ export default function Profile() {
 // const obj = {x: 1, y: 2};
 // const {x, y} = obj; // x = 1, y = 2 // 对象解构
 // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Destructuring#Unpacking_fields_from_objects_passed_as_a_function_parameter
-function Avatar({person, size}) {
-    return (
-        <img
-            className="avatar"
-            src={getImageUrl(person)}
-            alt={person.name}
-            width={size}
-            height={size}
-        />
-    );
+function Avatar({ person, size }) {
+  return (
+    <img
+      className="avatar"
+      src={getImageUrl(person)}
+      alt={person.name}
+      width={size}
+      height={size}
+    />
+  );
 }
 ```
 
@@ -138,8 +145,8 @@ function Avatar({person, size}) {
 给 props 设置默认值, 默认值仅在没有传递该 props 或该 `props=undefined` 时生效。
 
 ```jsx
-function Avatar({person, size = 50}) {
-    // ...
+function Avatar({ person, size = 50 }) {
+  // ...
 }
 ```
 
@@ -154,44 +161,38 @@ function Avatar({person, size = 50}) {
 if，有选择的返回 jsx 表达式
 
 ```jsx
- let itemContent = (<span>name</span>);
+let itemContent = <span>name</span>;
 if (isPacked) {
-    // itemContent = name + '✅✅✅';
-    itemContent = (
-        <del>
-            {name + '✅✅✅'}
-        </del>
-    );
+  // itemContent = name + '✅✅✅';
+  itemContent = <del>{name + "✅✅✅"}</del>;
 }
-return (
-    <li className="item">
-        {itemContent}
-    </li>
-)
+return <li className="item">{itemContent}</li>;
 ```
 
 三元运算符， 简化 if 判断
 
 ```jsx
- // return isPacked
- // ? null // <li className="item">{name} ✅</li>
- // : <li className="item">{name}</li>;
-return <li className="item">
+// return isPacked
+// ? null // <li className="item">{name} ✅</li>
+// : <li className="item">{name}</li>;
+return (
+  <li className="item">
     {
-        // (isPacked ? name + '✅' : name)
-        isPacked
-            ? <del>{name + '✅'}</del>
-            : (name)
+      // (isPacked ? name + '✅' : name)
+      isPacked ? <del>{name + "✅"}</del> : name
     }
-</li>;
+  </li>
+);
 ```
 
 && 运算符，简化三元表达式， && 运算符左侧为 false 时，不会渲染右侧表达式。
 
 ```jsx
-return <li className="item">
-    {name} {isPacked && '✅✅'}
-</li>
+return (
+  <li className="item">
+    {name} {isPacked && "✅✅"}
+  </li>
+);
 ```
 
 **切勿将数字放在 && 左侧**
@@ -199,7 +200,7 @@ return <li className="item">
 ## 渲染列表
 
 ```jsx
-const listItems = people.map(person => <li key={Math.random()}>{person}</li>);
+const listItems = people.map((person) => <li key={Math.random()}>{person}</li>);
 return <ul>{listItems}</ul>;
 ```
 
@@ -208,16 +209,17 @@ return <ul>{listItems}</ul>;
 1. 箭头函数后面跟着小括号 `()` 时，隐式
 
 ```jsx
-const listItems = chemists.map(person =>
-    <li>...</li> // 隐式地返回！
+const listItems = chemists.map(
+  (person) => <li>...</li>, // 隐式地返回！
 );
 ```
 
 2. 箭头函数后面跟着大括号 `{}` 时，必须使用 `return` 语句来返回值。
 
 ```jsx
-const listItems = chemists.map(person => { // 花括号， 块函数体
-    return <li>...</li>;
+const listItems = chemists.map((person) => {
+  // 花括号， 块函数体
+  return <li>...</li>;
 });
 ```
 
@@ -238,16 +240,16 @@ Fragment 标签, 用于包裹多个元素而不添加额外的 DOM 元素。
 使用 Fragment 语法（通常写作 <> </>）来包裹 JSX 节点可以避免引入额外的 <div> 元素！
 
 ```jsx
-import {Fragment} from 'react';
+import { Fragment } from "react";
 
 // ...
 
-const listItems = people.map(person =>
-    <Fragment key={person.id}>
-        <h1>{person.name}</h1>
-        <p>{person.bio}</p>
-    </Fragment>
-);
+const listItems = people.map((person) => (
+  <Fragment key={person.id}>
+    <h1>{person.name}</h1>
+    <p>{person.bio}</p>
+  </Fragment>
+));
 ```
 
 key 需要满足的条件
@@ -299,7 +301,4 @@ React 假设你编写的所有组件都是纯函数，即你编写的 React 组�
 > 应用程序中的顶级和叶子组件。顶级组件是离根组件最近的组件，它们影响其下所有组件的渲染性能，
 > 通常包含最多复杂性。叶子组件位于树的底部，没有子组件，通常会频繁重新渲染。
 
-
-
-
-
+## 响应事件
