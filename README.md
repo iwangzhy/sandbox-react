@@ -149,3 +149,49 @@ function Avatar({person, size = 50}) {
 
 需要交互性是，可以使用`setState` 来更新组件的状态。
 
+## 条件渲染
+
+if，有选择的返回 jsx 表达式
+
+```jsx
+ let itemContent = (<span>name</span>);
+if (isPacked) {
+    // itemContent = name + '✅✅✅';
+    itemContent = (
+        <del>
+            {name + '✅✅✅'}
+        </del>
+    );
+}
+return (
+    <li className="item">
+        {itemContent}
+    </li>
+)
+```
+
+三元运算符， 简化 if 判断
+
+```jsx
+ // return isPacked
+ // ? null // <li className="item">{name} ✅</li>
+ // : <li className="item">{name}</li>;
+return <li className="item">
+    {
+        // (isPacked ? name + '✅' : name)
+        isPacked
+            ? <del>{name + '✅'}</del>
+            : (name)
+    }
+</li>;
+```
+
+&& 运算符，简化三元表达式， && 运算符左侧为 false 时，不会渲染右侧表达式。
+
+```jsx
+return <li className="item">
+    {name} {isPacked && '✅✅'}
+</li>
+```
+
+**切勿将数字放在 && 左侧**
