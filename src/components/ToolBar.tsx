@@ -1,8 +1,14 @@
-function Button({ onClick, children }) {
+function Button({
+  onClick,
+  children,
+}: {
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
   return <button onClick={onClick}>{children}</button>;
 }
 
-function PlayButton({ movieName }) {
+function PlayButton({ movieName }: { movieName: string }) {
   function handlePlayClick() {
     alert(`正在播放 ${movieName}！`);
   }

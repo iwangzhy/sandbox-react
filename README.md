@@ -317,7 +317,7 @@ React 可以在 jsx 中添加 `事件处理函数`。
 3. 在 html 标签上通过**箭头函数**
    定义事件处理函数 [https://zh.javascript.info/arrow-functions-basics](https://zh.javascript.info/arrow-functions-basics)
 
-**传递给事件处理函数的函数应直接传递，而非调用。**， 即 `onClick={handleClick}` 而不是 ~~`onClick={handleClick()}`~~。
+**传递给事件处理函数的函数应直接传递，而非调用。** 即 `onClick={handleClick}` 而不是 ~~`onClick={handleClick()}`~~。
 
 箭头函数
 
@@ -326,7 +326,7 @@ React 可以在 jsx 中添加 `事件处理函数`。
 - 如果没有参数，括号则是空的（但括号必须保留）： `let func = () => expression;`
 - 箭头函数可以像函数表达式一样使用。
 
-因为事件处理函数在组件内部定义的，因此，它们可以访问到 props 。
+事件处理函数在组件内部定义的，因此，它们可以访问到 props 。
 
 也可以将事件处理函数作为 props 传递给子组件。（子组件通常会包含样式，但是不会指定行为。）
 
@@ -351,9 +351,9 @@ export default function App() {
 
 在 React 中所有事件都会传播，除了 onScroll，它仅适用于你附加到的 JSX 标签。
 
-使用 `e.stopPropagation()` 来阻止事件传播。阻止触发绑定在外层标签上的事件处理函数。
+使用 `e.stopPropagation()` 来**阻止事件传播**。阻止触发绑定在外层标签上的事件处理函数。
 
-使用 `e.preventDefault()` 来阻止默认行为。阻止少数事件的默认浏览器行为。
+使用 `e.preventDefault()` 来**阻止默认行为**。阻止少数事件的默认浏览器行为。
 
 从子组件显式调用事件处理函数 prop 是事件传播的另一种优秀替代方案。
 
@@ -372,3 +372,37 @@ function Button({ onClick, children }) {
   );
 }
 ```
+
+## state：组件的记忆
+
+组件需要记住某些东西，在 react 中，这些组件特有的记忆称为 state
+
+为什么不使用局部变量？
+
+1. 局部变量无法在多次渲染中持久保存。
+2. 更改局部变量不会触发渲染。
+
+`useTsate` hook 提供了两个功能
+
+1. state 变量用于保存渲染间的数据
+2. state setter 函数更新变量并触发 react 再次渲染组件
+
+```jsx
+const [index, setIndex] = useState(0);
+```
+
+index 是 state 变量(**会保存上次渲染的值**)，setIndex 是对于的 setter 函数
+**可以更新 state 变量并触发 React 重新渲染组件**
+
+hooks : 以 use 开头的函数, **只能在组件或自定义 Hook 的最顶层调用。**
+
+hook 是特殊的函数,只在 react 渲染时有效.
+
+如果同时修改 2 个 state 变量,那么最好将它们合并成一个 object 类型的 state 变量。
+
+在同一组件的每次渲染中，Hooks
+都依托于一个稳定的调用顺序。 [https://medium.com/@ryardley/react-hooks-not-magic-just-arrays-cd4f1857236e](https://medium.com/@ryardley/react-hooks-not-magic-just-arrays-cd4f1857236e)
+
+State 是隔离且私有的
+
+如果你渲染同一个组件两次，每个副本都会有完全隔离的 state！
