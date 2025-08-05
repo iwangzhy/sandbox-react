@@ -1,8 +1,8 @@
 import "./App.css";
-import { Chemist } from "./components/Chemist.tsx";
+import ToolBar from "./components/ToolBar.tsx";
 
 function App() {
-  return <Chemist />;
+  return <ToolBar />;
 }
 
 export default App;

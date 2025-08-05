@@ -302,3 +302,73 @@ React 假设你编写的所有组件都是纯函数，即你编写的 React 组�
 > 通常包含最多复杂性。叶子组件位于树的底部，没有子组件，通常会频繁重新渲染。
 
 ## 响应事件
+
+React 可以在 jsx 中添加 `事件处理函数`。
+
+事件处理函数
+
+- 通常在组件内部定义
+- 名称以 `handle` 开头，后面跟着事件名称。 如 `handleClick`，`handleChange`， `handleMouseEnter` 等
+
+传递事件处理函数的三个方法
+
+1. 在组件内部定义 handle 函数
+2. 在 html 标签上直接定义事件处理函数（**内联的事件处理函数**）
+3. 在 html 标签上通过**箭头函数**
+   定义事件处理函数 [https://zh.javascript.info/arrow-functions-basics](https://zh.javascript.info/arrow-functions-basics)
+
+**传递给事件处理函数的函数应直接传递，而非调用。**， 即 `onClick={handleClick}` 而不是 ~~`onClick={handleClick()}`~~。
+
+箭头函数
+
+- `let func = (arg1, arg2, ..., argN) => expression;`
+- 如果我们只有一个参数，还可以省略掉参数外的圆括号，使代码更短。 `let func = arg => expression;`
+- 如果没有参数，括号则是空的（但括号必须保留）： `let func = () => expression;`
+- 箭头函数可以像函数表达式一样使用。
+
+因为事件处理函数在组件内部定义的，因此，它们可以访问到 props 。
+
+也可以将事件处理函数作为 props 传递给子组件。（子组件通常会包含样式，但是不会指定行为。）
+
+内置组件（指的是 html 标签） 只支持浏览器事件，可以将事件处理函数通过 props 传递给子组件来实现自定义事件。
+
+下面的代码就给 Button 添加了一个 `onSmash` 事件处理函数，点击按钮时会触发该函数。
+
+```jsx
+function Button({ onSmash, children }) {
+  return <button onClick={onSmash}>{children}</button>;
+}
+
+export default function App() {
+  return (
+    <div>
+      <Button onSmash={() => alert("正在播放！")}>播放电影</Button>
+      <Button onSmash={() => alert("正在上传！")}>上传图片</Button>
+    </div>
+  );
+}
+```
+
+在 React 中所有事件都会传播，除了 onScroll，它仅适用于你附加到的 JSX 标签。
+
+使用 `e.stopPropagation()` 来阻止事件传播。阻止触发绑定在外层标签上的事件处理函数。
+
+使用 `e.preventDefault()` 来阻止默认行为。阻止少数事件的默认浏览器行为。
+
+从子组件显式调用事件处理函数 prop 是事件传播的另一种优秀替代方案。
+
+```jsx
+function Button({ onClick, children }) {
+  return (
+    <button
+      onClick={(e) => {
+        e.stopPropagation();
+        // 显式调用事件处理函数
+        onClick();
+      }}
+    >
+      {children}
+    </button>
+  );
+}
+```
