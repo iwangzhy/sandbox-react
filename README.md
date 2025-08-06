@@ -11,15 +11,15 @@ React **组件的名称必须大写**
 标签和 return 不再一行，则必须使**用括号包裹**。
 
 ```tsx
-return <img src="https://i.imgur.com/MK3eW3As.jpg" alt="Katherine Johnson" />;
+return <img src="https://i.imgur.com/MK3eW3As.jpg" alt="Katherine Johnson"/>;
 ```
 
 ```tsx
 return (
-  // 标签与 return 关键字不在同一行，需要使用括号包裹
-  <div>
-    <img src="https://i.imgur.com/MK3eW3As.jpg" alt="Katherine Johnson" />
-  </div>
+    // 标签与 return 关键字不在同一行，需要使用括号包裹
+    <div>
+        <img src="https://i.imgur.com/MK3eW3As.jpg" alt="Katherine Johnson"/>
+    </div>
 );
 ```
 
@@ -70,13 +70,13 @@ JSX 转化器： [https://transform.tools/html-to-jsx](https://transform.tools/h
 
 ```jsx
 export default function App() {
-  return (
-    <img
-      className="avatar"
-      src="https://i.imgur.com/MK3eW3As.jpg"
-      alt="Katherine Johnson"
-    />
-  );
+    return (
+        <img
+            className="avatar"
+            src="https://i.imgur.com/MK3eW3As.jpg"
+            alt="Katherine Johnson"
+        />
+    );
 }
 ```
 
@@ -84,9 +84,9 @@ export default function App() {
 
 ```jsx
 export default function App() {
-  const src = "https://i.imgur.com/MK3eW3As.jpg";
-  const alt = "Katherine Johnson";
-  return <img className="avatar" src={src} alt={alt} />;
+    const src = "https://i.imgur.com/MK3eW3As.jpg";
+    const alt = "Katherine Johnson";
+    return <img className="avatar" src={src} alt={alt}/>;
 }
 ```
 
@@ -127,16 +127,16 @@ export default function Profile() {
 // const obj = {x: 1, y: 2};
 // const {x, y} = obj; // x = 1, y = 2 // 对象解构
 // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Destructuring#Unpacking_fields_from_objects_passed_as_a_function_parameter
-function Avatar({ person, size }) {
-  return (
-    <img
-      className="avatar"
-      src={getImageUrl(person)}
-      alt={person.name}
-      width={size}
-      height={size}
-    />
-  );
+function Avatar({person, size}) {
+    return (
+        <img
+            className="avatar"
+            src={getImageUrl(person)}
+            alt={person.name}
+            width={size}
+            height={size}
+        />
+    );
 }
 ```
 
@@ -145,8 +145,8 @@ function Avatar({ person, size }) {
 给 props 设置默认值, 默认值仅在没有传递该 props 或该 `props=undefined` 时生效。
 
 ```jsx
-function Avatar({ person, size = 50 }) {
-  // ...
+function Avatar({person, size = 50}) {
+    // ...
 }
 ```
 
@@ -163,8 +163,8 @@ if，有选择的返回 jsx 表达式
 ```jsx
 let itemContent = <span>name</span>;
 if (isPacked) {
-  // itemContent = name + '✅✅✅';
-  itemContent = <del>{name + "✅✅✅"}</del>;
+    // itemContent = name + '✅✅✅';
+    itemContent = <del>{name + "✅✅✅"}</del>;
 }
 return <li className="item">{itemContent}</li>;
 ```
@@ -176,12 +176,12 @@ return <li className="item">{itemContent}</li>;
 // ? null // <li className="item">{name} ✅</li>
 // : <li className="item">{name}</li>;
 return (
-  <li className="item">
-    {
-      // (isPacked ? name + '✅' : name)
-      isPacked ? <del>{name + "✅"}</del> : name
-    }
-  </li>
+    <li className="item">
+        {
+            // (isPacked ? name + '✅' : name)
+            isPacked ? <del>{name + "✅"}</del> : name
+        }
+    </li>
 );
 ```
 
@@ -189,9 +189,9 @@ return (
 
 ```jsx
 return (
-  <li className="item">
-    {name} {isPacked && "✅✅"}
-  </li>
+    <li className="item">
+        {name} {isPacked && "✅✅"}
+    </li>
 );
 ```
 
@@ -210,7 +210,7 @@ return <ul>{listItems}</ul>;
 
 ```jsx
 const listItems = chemists.map(
-  (person) => <li>...</li>, // 隐式地返回！
+    (person) => <li>...</li>, // 隐式地返回！
 );
 ```
 
@@ -218,8 +218,8 @@ const listItems = chemists.map(
 
 ```jsx
 const listItems = chemists.map((person) => {
-  // 花括号， 块函数体
-  return <li>...</li>;
+    // 花括号， 块函数体
+    return <li>...</li>;
 });
 ```
 
@@ -240,15 +240,15 @@ Fragment 标签, 用于包裹多个元素而不添加额外的 DOM 元素。
 使用 Fragment 语法（通常写作 <> </>）来包裹 JSX 节点可以避免引入额外的 <div> 元素！
 
 ```jsx
-import { Fragment } from "react";
+import {Fragment} from "react";
 
 // ...
 
 const listItems = people.map((person) => (
-  <Fragment key={person.id}>
-    <h1>{person.name}</h1>
-    <p>{person.bio}</p>
-  </Fragment>
+    <Fragment key={person.id}>
+        <h1>{person.name}</h1>
+        <p>{person.bio}</p>
+    </Fragment>
 ));
 ```
 
@@ -337,17 +337,17 @@ React 可以在 jsx 中添加 `事件处理函数`。
 下面的代码就给 Button 添加了一个 `onSmash` 事件处理函数，点击按钮时会触发该函数。
 
 ```jsx
-function Button({ onSmash, children }) {
-  return <button onClick={onSmash}>{children}</button>;
+function Button({onSmash, children}) {
+    return <button onClick={onSmash}>{children}</button>;
 }
 
 export default function App() {
-  return (
-    <div>
-      <Button onSmash={() => alert("正在播放！")}>播放电影</Button>
-      <Button onSmash={() => alert("正在上传！")}>上传图片</Button>
-    </div>
-  );
+    return (
+        <div>
+            <Button onSmash={() => alert("正在播放！")}>播放电影</Button>
+            <Button onSmash={() => alert("正在上传！")}>上传图片</Button>
+        </div>
+    );
 }
 ```
 
@@ -360,18 +360,18 @@ export default function App() {
 从子组件显式调用事件处理函数 prop 是事件传播的另一种优秀替代方案。
 
 ```jsx
-function Button({ onClick, children }) {
-  return (
-    <button
-      onClick={(e) => {
-        e.stopPropagation();
-        // 显式调用事件处理函数
-        onClick();
-      }}
-    >
-      {children}
-    </button>
-  );
+function Button({onClick, children}) {
+    return (
+        <button
+            onClick={(e) => {
+                e.stopPropagation();
+                // 显式调用事件处理函数
+                onClick();
+            }}
+        >
+            {children}
+        </button>
+    );
 }
 ```
 
@@ -414,14 +414,14 @@ State 是隔离且私有的
 组件在显示到屏幕之前，必须被 react 渲染。
 
 1. 触发渲染
-   - 组件的初次渲染
-   - 组件的 state 或 props 发生变化
+    - 组件的初次渲染
+    - 组件的 state 或 props 发生变化
 2. 渲染组件（**整个过程是递归的**）
-   - 在进行初次渲染时，react 会调用根组件
-   - 对于后续的渲染，react 会调用内部状态更新触发了渲染的函数组件。
+    - 在进行初次渲染时，react 会调用根组件
+    - 对于后续的渲染，react 会调用内部状态更新触发了渲染的函数组件。
 3. 提交到 DOM
-   - 对于初次渲染，react 会使用 `appendChild()` DOM API 将其创建的所有 DOM 节点放在屏幕上
-   - 对于重新渲染，react 将应用最少的必要操作(在渲染时计算)，以使得 DOM 与最新的渲染输出相互匹配。
+    - 对于初次渲染，react 会使用 `appendChild()` DOM API 将其创建的所有 DOM 节点放在屏幕上
+    - 对于重新渲染，react 将应用最少的必要操作(在渲染时计算)，以使得 DOM 与最新的渲染输出相互匹配。
 
 初次渲染：**当应用启动时，会触发初次渲染**。通过调用 `createRoot` 方法并传入目标 DOM 节点，然后用你的组件调用 render 函数完成的。
 
@@ -456,22 +456,22 @@ props、事件处理函数和内部变量都是 根据当前渲染时的 state �
 
 ```jsx
 export default function Counter() {
-  const [number, setNumber] = useState(0);
+    const [number, setNumber] = useState(0);
 
-  return (
-    <>
-      <h1>{number}</h1>
-      <button
-        onClick={() => {
-          setNumber(number + 1);
-          setNumber(number + 1);
-          setNumber(number + 1);
-        }}
-      >
-        +3
-      </button>
-    </>
-  );
+    return (
+        <>
+            <h1>{number}</h1>
+            <button
+                onClick={() => {
+                    setNumber(number + 1);
+                    setNumber(number + 1);
+                    setNumber(number + 1);
+                }}
+            >
+                +3
+            </button>
+        </>
+    );
 }
 ```
 
@@ -492,25 +492,25 @@ export default function Counter() {
 `setState(x)` === `setState(n => x)`
 
 ```jsx
-import { useState } from "react";
+import {useState} from "react";
 
 export default function Counter() {
-  const [number, setNumber] = useState(0);
+    const [number, setNumber] = useState(0);
 
-  return (
-    <>
-      <h1>{number}</h1>
-      <button
-        onClick={() => {
-          setNumber(number + 5);
-          setNumber((n) => 5);
-          setNumber((n) => n + 1);
-        }}
-      >
-        增加数字
-      </button>
-    </>
-  );
+    return (
+        <>
+            <h1>{number}</h1>
+            <button
+                onClick={() => {
+                    setNumber(number + 5);
+                    setNumber((n) => 5);
+                    setNumber((n) => n + 1);
+                }}
+            >
+                增加数字
+            </button>
+        </>
+    );
 }
 ```
 
