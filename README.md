@@ -575,3 +575,99 @@ updatePerson(draft => {
     draft.age++;
 });
 ```
+
+## 更新 state 中的数组
+
+[https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array)
+
+es6 中会修改原数组的方法： `push()`，`pop()`，`shift()`，`unshift()`，`splice()`，`reverse()`，`sort()`，`fill()`，`copyWithin()`
+
+es6 中不会修改原数组的方法： `concat()`，`slice()`，`map()`，`filter()`，`reduce()`，`find()`，`every()`，`some()`，`indexOf()`，
+`includes()`
+
+**slice 不会修改原数组，splice 会修改原数组。**
+
+添加元素
+
+```js
+setArtists([
+    ...artists,
+    {id: nextId++, name: name}
+]);
+```
+
+删除元素
+
+```js
+setArtists(
+    artists.filter(a =>
+        a.id !== artist.id
+    )
+);
+```
+
+转换数组
+
+```jsx
+// 使用新的数组进行重渲染
+setShapes(hapes.map(shape => {
+    if (shape.type === 'square') {
+        // 不作改变
+        return shape;
+    } else {
+        // 返回一个新的圆形，位置在下方 50px 处
+        return {
+            ...shape,
+            y: shape.y + 50,
+        };
+    }
+}));
+```
+
+替换数组中的元素
+
+```jsx
+setCounters(counters.map((c, i) => {
+    if (i === index) {
+        // 递增被点击的计数器数值
+        return c + 1;
+    } else {
+        // 其余部分不发生变化
+        return c;
+    }
+}));
+```
+
+向数组中插入元素
+
+```jsx
+
+function handleClick() {
+    const insertAt = 1; // 可能是任何索引
+    const nextArtists = [
+        // 插入点之前的元素：
+        ...artists.slice(0, insertAt),
+        // 新的元素：
+        {id: nextId++, name: name},
+        // 插入点之后的元素：
+        ...artists.slice(insertAt)
+    ];
+    setArtists(nextArtists);
+    setName('');
+}
+```
+
+**即使你拷贝了数组，你还是不能直接修改其内部的元素**（slice 是浅拷贝）。这是因为数组的拷贝是浅拷贝——新的数组中依然保留了与原始数组相同的元素。
+
+```jsx
+setMyList(myList.map(artwork => {
+    if (artwork.id === artworkId) {
+        // 创建包含变更的*新*对象
+        return {...artwork, seen: nextSeen};
+    } else {
+        // 没有变更
+        return artwork;
+    }
+}));
+```
+
