@@ -479,3 +479,45 @@ export default function Counter() {
 
 **一个 state 变量的值永远不会在一次渲染的内部发生变化**， 即使其事件处理函数的代码是异步的。在 那次渲染的 onClick
 内部，number 的值即使在调用 setNumber(number + 5) 之后也还是 0。它的值在 React 通过调用你的组件“获取 UI 的快照”时就被“固定”了。
+
+## 把一系列 state 更新加入队列
+
+**React 会等到事件处理函数中的** 所有 **代码都运行完毕再处理你的 state 更新**。
+
+在下次渲染前多次更新同一个 state ，（传递一个函数进去）
+
+1. React 会将此函数加入队列，以便在事件处理函数中的所有其他代码运行后进行处理。
+2. 在下一次渲染期间，React 会遍历队列并给你更新之后的最终 state。
+
+`setState(x)` === `setState(n => x)`
+
+```jsx
+import { useState } from "react";
+
+export default function Counter() {
+  const [number, setNumber] = useState(0);
+
+  return (
+    <>
+      <h1>{number}</h1>
+      <button
+        onClick={() => {
+          setNumber(number + 5);
+          setNumber((n) => 5);
+          setNumber((n) => n + 1);
+        }}
+      >
+        增加数字
+      </button>
+    </>
+  );
+}
+```
+
+通常可以通过相应 state 变量的第一个字母来命名更新函数的参数：
+
+```js
+setEnabled((e) => !e);
+setLastName((ln) => ln.reverse());
+setFriendCount((fc) => fc * 2);
+```
