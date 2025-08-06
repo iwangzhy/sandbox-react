@@ -1,8 +1,8 @@
 import "./App.css";
-import ToolBar from "./components/ToolBar.tsx";
+import Form from "./components/Form.tsx";
 
 function App() {
-  return <ToolBar />;
+    return <Form/>;
 }
 
 export default App;

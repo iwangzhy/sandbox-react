@@ -521,3 +521,57 @@ setEnabled((e) => !e);
 setLastName((ln) => ln.reverse());
 setFriendCount((fc) => fc * 2);
 ```
+
+## 更新 state 中的对象
+
+state 中可以保存任意类型的 JavaScript 值, 你不应该直接修改存放在 React state 中的对象,
+当你想要更新一个对象时，你需要创建一个新的对象（或者将其拷贝一份），然后将 state 更新为此对象。
+
+**什么是 mutation？ 直接修改了 state 的属性值**
+
+如果避免 mutation? 通过 setState 方法传入一个新的对象来更新 state
+
+你应该 把所有存放在 state 中的 JavaScript 对象都视为只读的。
+
+使用展开语法复制对象
+
+```jsx
+setPerson({
+    ...person, // 复制上一个 person 中的所有字段
+    firstName: e.target.value // 但是覆盖 firstName 字段 
+});
+```
+
+属性的动态命名， 使用 `[]` 来动态设置属性名。
+
+```jsx
+ setPerson({
+    ...person,
+    [e.target.name]: e.target.value
+});
+```
+
+更新嵌套对象
+
+```jsx
+setPerson({
+    ...person, // 复制其它字段的数据 
+    artwork: { // 替换 artwork 字段 
+        ...person.artwork, // 复制之前 person.artwork 中的数据
+        city: 'New Delhi' // 但是将 city 的值替换为 New Delhi！
+    }
+});
+```
+
+使用 `use-immer`, 编写简洁的更新逻辑
+
+```jsx
+const [person, updatePerson] = useImmer({
+    name: "Michel",
+    age: 33
+});
+
+updatePerson(draft => {
+    draft.age++;
+});
+```
