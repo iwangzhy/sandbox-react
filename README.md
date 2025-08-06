@@ -671,3 +671,8 @@ setMyList(myList.map(artwork => {
 }));
 ```
 
+## 用 State 响应输入
+
+React 控制 UI 的方式是声明式的。
+
+只需要声明组件可以处于的不同状态，并根据用户的输入在它们之间切换。
