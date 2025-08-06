@@ -436,3 +436,46 @@ State 是隔离且私有的
 在渲染完成并且 React 更新 DOM 之后，浏览器就会重新绘制屏幕。 painting 绘制。
 
 如果渲染结果与上次一样，那么 React 将不会修改 DOM
+
+## state 如同一张快照
+
+设置 state 会触发渲染。
+
+“正在渲染” 就意味着 React 正在调用你的组件——一个函数。你从该函数返回的 JSX 就像是在某个时间点上 UI 的快照。它的
+props、事件处理函数和内部变量都是 根据当前渲染时的 state 被计算出来的。
+
+当 react 重新渲染一个组件时
+
+1. react 会再次调用你的函数
+2. 函数会返回新的 jsx 快照
+3. react 会更新界面以匹配返回的快照
+
+![](https://minio.wangzhy.com/picgo/202508061552678.png)
+
+设置 state 只会为下一次渲染变更 state 的值。 （**在一个渲染内，对同一个 state 进行多次操作，只有第一次操作生效。**）
+
+```jsx
+export default function Counter() {
+  const [number, setNumber] = useState(0);
+
+  return (
+    <>
+      <h1>{number}</h1>
+      <button
+        onClick={() => {
+          setNumber(number + 1);
+          setNumber(number + 1);
+          setNumber(number + 1);
+        }}
+      >
+        +3
+      </button>
+    </>
+  );
+}
+```
+
+每次点击按钮，number 只会加 1。
+
+**一个 state 变量的值永远不会在一次渲染的内部发生变化**， 即使其事件处理函数的代码是异步的。在 那次渲染的 onClick
+内部，number 的值即使在调用 setNumber(number + 5) 之后也还是 0。它的值在 React 通过调用你的组件“获取 UI 的快照”时就被“固定”了。
