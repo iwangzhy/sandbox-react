@@ -309,7 +309,7 @@ React 可以在 jsx 中添加 `事件处理函数`。
 
 - 自定义函数
 - 在响应交互（点击、悬停、获得焦点等）时触发
-- 通常在组件内部定义
+- 通常在**组件内部定义**
 - 名称以 `handle` 开头，后面跟着事件名称。 如 `handleClick`，`handleChange`， `handleMouseEnter` 等
 
 传递事件处理函数的三个方法
@@ -330,9 +330,11 @@ React 可以在 jsx 中添加 `事件处理函数`。
 
 事件处理函数在组件内部定义的，因此，它们可以访问到 props 。
 
-也可以将事件处理函数作为 props 传递给子组件。（子组件通常会包含样式，但是不会指定行为。）
+也可以将事件处理函数作为 props 传递给子组件(在父组件定义的子组件的事件处理函数)。（子组件通常会包含样式，但是不会指定行为。）
 
 内置组件（指的是 html 标签） 只支持浏览器事件，可以将事件处理函数通过 props 传递给子组件来实现自定义事件。
+
+**事件处理函数 props 应该以 on 开头**，如 onClick
 
 下面的代码就给 Button 添加了一个 `onSmash` 事件处理函数，点击按钮时会触发该函数。
 
@@ -384,13 +386,13 @@ function Button({ onClick, children }) {
 1. 局部变量无法在多次渲染中持久保存。
 2. 更改局部变量不会触发渲染。
 
-`useTsate` hook 提供了两个功能
+`useState` hook 提供了两个功能
 
 1. state 变量用于保存渲染间的数据
 2. state setter 函数更新变量并触发 react 再次渲染组件
 
 ```jsx
-const [index, setIndex] = useState(0);
+const [index, setIndex] = useState(0); // useState 方法的参数就是 state 的初始值
 ```
 
 index 是 state 变量(**会保存上次渲染的值**)，setIndex 是对于的 setter 函数
@@ -524,14 +526,14 @@ setFriendCount((fc) => fc * 2);
 
 ## 更新 state 中的对象
 
-state 中可以保存任意类型的 JavaScript 值, 你不应该直接修改存放在 React state 中的对象,
-当你想要更新一个对象时，你需要创建一个新的对象（或者将其拷贝一份），然后将 state 更新为此对象。
+state 中可以保存任意类型的 JavaScript 值, 你**不应该直接修改存放在 React state 中的对象**,
+当你想要更新一个对象时，你需要**创建一个新的对象（或者将其拷贝一份）**，然后将 state 更新为此对象。
 
 **什么是 mutation？ 直接修改了 state 的属性值**
 
 如果避免 mutation? 通过 setState 方法传入一个新的对象来更新 state
 
-你应该 把所有存放在 state 中的 JavaScript 对象都视为只读的。
+你应该 把所有存放在 state 中的 JavaScript 对象都视为只读的。（**将 state 视为只读的**）
 
 使用展开语法复制对象
 
