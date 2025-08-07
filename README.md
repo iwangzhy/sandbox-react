@@ -106,7 +106,7 @@ React 组件通过使用 props 来互相通信。
 给子组件传递 props (写法类似于 html 标签的属性)
 
 ```jsx
-export default function Profile () {
+export default function Profile() {
   return (
     <Avatar
       person={{ name: 'xxx', imageId: 'id' }}
@@ -676,4 +676,33 @@ setMyList(
 
 React 控制 UI 的方式是声明式的。
 
-只需要声明组件可以处于的不同状态，并根据用户的输入在它们之间切换。
+只需要声明组件可以处于的不同状态，并根据用户的输入在它们之间切换。**根据 state 的值来写 jsx 代码**
+
+1. 确定需要用到哪些 state 变量
+   - 这个 state 是否会导致矛盾
+   - 相同的信息是否已经在另一个 state 变量中存在？
+   - 是否可以通过另一个 state 变量计算出来？
+2. 确定是什么触发了这些 state 的改变(**涉及到了，事件处理函数**)
+
+## 选择 state 结构
+
+构建良好的 state 可以让组件变得易于修改和调试
+
+构建 state 的原则
+
+1. 合并关联的 state。（如，同时更新多个 state 时，考虑将这些 state 合并）
+2. 避免相互矛盾的 state。（一个 state 可以由另外的 state 计算得出）
+3. 避免冗余的 state。
+4. 避免重复的 state。
+5. 避免深度嵌套的 state。（深度嵌套的 state 更新起来不方便）
+
+依赖组件 props 传递进来的变量渲染的属性，不应该作为 state 。
+
+```jsx
+import { useState } from "react";
+
+export default function Clock(props) {
+  const [color, setColor] = useState(props.color);
+  return <h1 style={{ color: color }}>{props.time}</h1>;
+}
+```
