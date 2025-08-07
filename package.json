@@ -21,10 +21,6 @@
     "package.json": [
       "prettier --write"
     ],
-    "*.{tsx,jsx}": [
-      "prettier --write",
-      "eslint --fix"
-    ],
     "*.{scss,less,styl,html}": [
       "prettier --write"
     ],

@@ -5,14 +5,14 @@
  *  标签和 return 不再一行，则必须使用括号包裹
  * */
 export default function TableOfContents() {
-    return (
-        <article>
-            <h2>第一个组件</h2>
-            <ol>
-                <ul>组件：UI 构成要素</ul>
-                <ul>定义组件</ul>
-                <ul>使用组件</ul>
-            </ol>
-        </article>
-    );
+  return (
+    <article>
+      <h2>第一个组件</h2>
+      <ol>
+        <ul>组件：UI 构成要素</ul>
+        <ul>定义组件</ul>
+        <ul>使用组件</ul>
+      </ol>
+    </article>
+  );
 }

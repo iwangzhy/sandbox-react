@@ -2,7 +2,7 @@ import "./App.css";
 import Form from "./components/Form.tsx";
 
 function App() {
-    return <Form/>;
+  return <Form />;
 }
 
 export default App;

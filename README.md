@@ -11,15 +11,15 @@ React **组件的名称必须大写**
 标签和 return 不再一行，则必须使**用括号包裹**。
 
 ```tsx
-return <img src="https://i.imgur.com/MK3eW3As.jpg" alt="Katherine Johnson"/>;
+return <img src="https://i.imgur.com/MK3eW3As.jpg" alt="Katherine Johnson" />;
 ```
 
 ```tsx
 return (
-    // 标签与 return 关键字不在同一行，需要使用括号包裹
-    <div>
-        <img src="https://i.imgur.com/MK3eW3As.jpg" alt="Katherine Johnson"/>
-    </div>
+  // 标签与 return 关键字不在同一行，需要使用括号包裹
+  <div>
+    <img src="https://i.imgur.com/MK3eW3As.jpg" alt="Katherine Johnson" />
+  </div>
 );
 ```
 
@@ -70,13 +70,13 @@ JSX 转化器： [https://transform.tools/html-to-jsx](https://transform.tools/h
 
 ```jsx
 export default function App() {
-    return (
-        <img
-            className="avatar"
-            src="https://i.imgur.com/MK3eW3As.jpg"
-            alt="Katherine Johnson"
-        />
-    );
+  return (
+    <img
+      className="avatar"
+      src="https://i.imgur.com/MK3eW3As.jpg"
+      alt="Katherine Johnson"
+    />
+  );
 }
 ```
 
@@ -84,9 +84,9 @@ export default function App() {
 
 ```jsx
 export default function App() {
-    const src = "https://i.imgur.com/MK3eW3As.jpg";
-    const alt = "Katherine Johnson";
-    return <img className="avatar" src={src} alt={alt}/>;
+  const src = "https://i.imgur.com/MK3eW3As.jpg";
+  const alt = "Katherine Johnson";
+  return <img className="avatar" src={src} alt={alt} />;
 }
 ```
 
@@ -106,14 +106,14 @@ React 组件通过使用 props 来互相通信。
 给子组件传递 props (写法类似于 html 标签的属性)
 
 ```jsx
-export default function Profile() {
-    return (
-        <Avatar
-            person={{name: 'xxx', imageId: 'id'}}
-            {/*这里使用大括号的原因是， size 是一个数值型，如果使用双引号，则表示size 是一个字符串*/}
-            size={100}
-        />
-    );
+export default function Profile () {
+  return (
+    <Avatar
+      person={{ name: 'xxx', imageId: 'id' }}
+      {/*这里使用大括号的原因是， size 是一个数值型，如果使用双引号，则表示size 是一个字符串*/}
+      size={100}
+    />
+  );
 }
 ```
 
@@ -127,16 +127,16 @@ export default function Profile() {
 // const obj = {x: 1, y: 2};
 // const {x, y} = obj; // x = 1, y = 2 // 对象解构
 // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Destructuring#Unpacking_fields_from_objects_passed_as_a_function_parameter
-function Avatar({person, size}) {
-    return (
-        <img
-            className="avatar"
-            src={getImageUrl(person)}
-            alt={person.name}
-            width={size}
-            height={size}
-        />
-    );
+function Avatar({ person, size }) {
+  return (
+    <img
+      className="avatar"
+      src={getImageUrl(person)}
+      alt={person.name}
+      width={size}
+      height={size}
+    />
+  );
 }
 ```
 
@@ -145,8 +145,8 @@ function Avatar({person, size}) {
 给 props 设置默认值, 默认值仅在没有传递该 props 或该 `props=undefined` 时生效。
 
 ```jsx
-function Avatar({person, size = 50}) {
-    // ...
+function Avatar({ person, size = 50 }) {
+  // ...
 }
 ```
 
@@ -163,8 +163,8 @@ if，有选择的返回 jsx 表达式
 ```jsx
 let itemContent = <span>name</span>;
 if (isPacked) {
-    // itemContent = name + '✅✅✅';
-    itemContent = <del>{name + "✅✅✅"}</del>;
+  // itemContent = name + '✅✅✅';
+  itemContent = <del>{name + "✅✅✅"}</del>;
 }
 return <li className="item">{itemContent}</li>;
 ```
@@ -176,12 +176,12 @@ return <li className="item">{itemContent}</li>;
 // ? null // <li className="item">{name} ✅</li>
 // : <li className="item">{name}</li>;
 return (
-    <li className="item">
-        {
-            // (isPacked ? name + '✅' : name)
-            isPacked ? <del>{name + "✅"}</del> : name
-        }
-    </li>
+  <li className="item">
+    {
+      // (isPacked ? name + '✅' : name)
+      isPacked ? <del>{name + "✅"}</del> : name
+    }
+  </li>
 );
 ```
 
@@ -189,9 +189,9 @@ return (
 
 ```jsx
 return (
-    <li className="item">
-        {name} {isPacked && "✅✅"}
-    </li>
+  <li className="item">
+    {name} {isPacked && "✅✅"}
+  </li>
 );
 ```
 
@@ -210,7 +210,7 @@ return <ul>{listItems}</ul>;
 
 ```jsx
 const listItems = chemists.map(
-    (person) => <li>...</li>, // 隐式地返回！
+  (person) => <li>...</li>, // 隐式地返回！
 );
 ```
 
@@ -218,8 +218,8 @@ const listItems = chemists.map(
 
 ```jsx
 const listItems = chemists.map((person) => {
-    // 花括号， 块函数体
-    return <li>...</li>;
+  // 花括号， 块函数体
+  return <li>...</li>;
 });
 ```
 
@@ -240,15 +240,15 @@ Fragment 标签, 用于包裹多个元素而不添加额外的 DOM 元素。
 使用 Fragment 语法（通常写作 <> </>）来包裹 JSX 节点可以避免引入额外的 <div> 元素！
 
 ```jsx
-import {Fragment} from "react";
+import { Fragment } from "react";
 
 // ...
 
 const listItems = people.map((person) => (
-    <Fragment key={person.id}>
-        <h1>{person.name}</h1>
-        <p>{person.bio}</p>
-    </Fragment>
+  <Fragment key={person.id}>
+    <h1>{person.name}</h1>
+    <p>{person.bio}</p>
+  </Fragment>
 ));
 ```
 
@@ -337,17 +337,17 @@ React 可以在 jsx 中添加 `事件处理函数`。
 下面的代码就给 Button 添加了一个 `onSmash` 事件处理函数，点击按钮时会触发该函数。
 
 ```jsx
-function Button({onSmash, children}) {
-    return <button onClick={onSmash}>{children}</button>;
+function Button({ onSmash, children }) {
+  return <button onClick={onSmash}>{children}</button>;
 }
 
 export default function App() {
-    return (
-        <div>
-            <Button onSmash={() => alert("正在播放！")}>播放电影</Button>
-            <Button onSmash={() => alert("正在上传！")}>上传图片</Button>
-        </div>
-    );
+  return (
+    <div>
+      <Button onSmash={() => alert("正在播放！")}>播放电影</Button>
+      <Button onSmash={() => alert("正在上传！")}>上传图片</Button>
+    </div>
+  );
 }
 ```
 
@@ -360,18 +360,18 @@ export default function App() {
 从子组件显式调用事件处理函数 prop 是事件传播的另一种优秀替代方案。
 
 ```jsx
-function Button({onClick, children}) {
-    return (
-        <button
-            onClick={(e) => {
-                e.stopPropagation();
-                // 显式调用事件处理函数
-                onClick();
-            }}
-        >
-            {children}
-        </button>
-    );
+function Button({ onClick, children }) {
+  return (
+    <button
+      onClick={(e) => {
+        e.stopPropagation();
+        // 显式调用事件处理函数
+        onClick();
+      }}
+    >
+      {children}
+    </button>
+  );
 }
 ```
 
@@ -414,14 +414,14 @@ State 是隔离且私有的
 组件在显示到屏幕之前，必须被 react 渲染。
 
 1. 触发渲染
-    - 组件的初次渲染
-    - 组件的 state 或 props 发生变化
+   - 组件的初次渲染
+   - 组件的 state 或 props 发生变化
 2. 渲染组件（**整个过程是递归的**）
-    - 在进行初次渲染时，react 会调用根组件
-    - 对于后续的渲染，react 会调用内部状态更新触发了渲染的函数组件。
+   - 在进行初次渲染时，react 会调用根组件
+   - 对于后续的渲染，react 会调用内部状态更新触发了渲染的函数组件。
 3. 提交到 DOM
-    - 对于初次渲染，react 会使用 `appendChild()` DOM API 将其创建的所有 DOM 节点放在屏幕上
-    - 对于重新渲染，react 将应用最少的必要操作(在渲染时计算)，以使得 DOM 与最新的渲染输出相互匹配。
+   - 对于初次渲染，react 会使用 `appendChild()` DOM API 将其创建的所有 DOM 节点放在屏幕上
+   - 对于重新渲染，react 将应用最少的必要操作(在渲染时计算)，以使得 DOM 与最新的渲染输出相互匹配。
 
 初次渲染：**当应用启动时，会触发初次渲染**。通过调用 `createRoot` 方法并传入目标 DOM 节点，然后用你的组件调用 render 函数完成的。
 
@@ -456,22 +456,22 @@ props、事件处理函数和内部变量都是 根据当前渲染时的 state �
 
 ```jsx
 export default function Counter() {
-    const [number, setNumber] = useState(0);
+  const [number, setNumber] = useState(0);
 
-    return (
-        <>
-            <h1>{number}</h1>
-            <button
-                onClick={() => {
-                    setNumber(number + 1);
-                    setNumber(number + 1);
-                    setNumber(number + 1);
-                }}
-            >
-                +3
-            </button>
-        </>
-    );
+  return (
+    <>
+      <h1>{number}</h1>
+      <button
+        onClick={() => {
+          setNumber(number + 1);
+          setNumber(number + 1);
+          setNumber(number + 1);
+        }}
+      >
+        +3
+      </button>
+    </>
+  );
 }
 ```
 
@@ -492,25 +492,25 @@ export default function Counter() {
 `setState(x)` === `setState(n => x)`
 
 ```jsx
-import {useState} from "react";
+import { useState } from "react";
 
 export default function Counter() {
-    const [number, setNumber] = useState(0);
+  const [number, setNumber] = useState(0);
 
-    return (
-        <>
-            <h1>{number}</h1>
-            <button
-                onClick={() => {
-                    setNumber(number + 5);
-                    setNumber((n) => 5);
-                    setNumber((n) => n + 1);
-                }}
-            >
-                增加数字
-            </button>
-        </>
-    );
+  return (
+    <>
+      <h1>{number}</h1>
+      <button
+        onClick={() => {
+          setNumber(number + 5);
+          setNumber((n) => 5);
+          setNumber((n) => n + 1);
+        }}
+      >
+        增加数字
+      </button>
+    </>
+  );
 }
 ```
 
@@ -537,17 +537,17 @@ state 中可以保存任意类型的 JavaScript 值, 你不应该直接修改存
 
 ```jsx
 setPerson({
-    ...person, // 复制上一个 person 中的所有字段
-    firstName: e.target.value // 但是覆盖 firstName 字段 
+  ...person, // 复制上一个 person 中的所有字段
+  firstName: e.target.value, // 但是覆盖 firstName 字段
 });
 ```
 
 属性的动态命名， 使用 `[]` 来动态设置属性名。
 
 ```jsx
- setPerson({
-    ...person,
-    [e.target.name]: e.target.value
+setPerson({
+  ...person,
+  [e.target.name]: e.target.value,
 });
 ```
 
@@ -555,11 +555,12 @@ setPerson({
 
 ```jsx
 setPerson({
-    ...person, // 复制其它字段的数据 
-    artwork: { // 替换 artwork 字段 
-        ...person.artwork, // 复制之前 person.artwork 中的数据
-        city: 'New Delhi' // 但是将 city 的值替换为 New Delhi！
-    }
+  ...person, // 复制其它字段的数据
+  artwork: {
+    // 替换 artwork 字段
+    ...person.artwork, // 复制之前 person.artwork 中的数据
+    city: "New Delhi", // 但是将 city 的值替换为 New Delhi！
+  },
 });
 ```
 
@@ -567,12 +568,12 @@ setPerson({
 
 ```jsx
 const [person, updatePerson] = useImmer({
-    name: "Michel",
-    age: 33
+  name: "Michel",
+  age: 33,
 });
 
-updatePerson(draft => {
-    draft.age++;
+updatePerson((draft) => {
+  draft.age++;
 });
 ```
 
@@ -590,85 +591,83 @@ es6 中不会修改原数组的方法： `concat()`，`slice()`，`map()`，`fil
 添加元素
 
 ```js
-setArtists([
-    ...artists,
-    {id: nextId++, name: name}
-]);
+setArtists([...artists, { id: nextId++, name: name }]);
 ```
 
 删除元素
 
 ```js
-setArtists(
-    artists.filter(a =>
-        a.id !== artist.id
-    )
-);
+setArtists(artists.filter((a) => a.id !== artist.id));
 ```
 
 转换数组
 
 ```jsx
 // 使用新的数组进行重渲染
-setShapes(hapes.map(shape => {
-    if (shape.type === 'square') {
-        // 不作改变
-        return shape;
+setShapes(
+  hapes.map((shape) => {
+    if (shape.type === "square") {
+      // 不作改变
+      return shape;
     } else {
-        // 返回一个新的圆形，位置在下方 50px 处
-        return {
-            ...shape,
-            y: shape.y + 50,
-        };
+      // 返回一个新的圆形，位置在下方 50px 处
+      return {
+        ...shape,
+        y: shape.y + 50,
+      };
     }
-}));
+  }),
+);
 ```
 
 替换数组中的元素
 
 ```jsx
-setCounters(counters.map((c, i) => {
+setCounters(
+  counters.map((c, i) => {
     if (i === index) {
-        // 递增被点击的计数器数值
-        return c + 1;
+      // 递增被点击的计数器数值
+      return c + 1;
     } else {
-        // 其余部分不发生变化
-        return c;
+      // 其余部分不发生变化
+      return c;
     }
-}));
+  }),
+);
 ```
 
 向数组中插入元素
 
 ```jsx
-
 function handleClick() {
-    const insertAt = 1; // 可能是任何索引
-    const nextArtists = [
-        // 插入点之前的元素：
-        ...artists.slice(0, insertAt),
-        // 新的元素：
-        {id: nextId++, name: name},
-        // 插入点之后的元素：
-        ...artists.slice(insertAt)
-    ];
-    setArtists(nextArtists);
-    setName('');
+  const insertAt = 1; // 可能是任何索引
+  const nextArtists = [
+    // 插入点之前的元素：
+    ...artists.slice(0, insertAt),
+    // 新的元素：
+    { id: nextId++, name: name },
+    // 插入点之后的元素：
+    ...artists.slice(insertAt),
+  ];
+  setArtists(nextArtists);
+  setName("");
 }
 ```
 
 **即使你拷贝了数组，你还是不能直接修改其内部的元素**（slice 是浅拷贝）。这是因为数组的拷贝是浅拷贝——新的数组中依然保留了与原始数组相同的元素。
 
 ```jsx
-setMyList(myList.map(artwork => {
+setMyList(
+  myList.map((artwork) => {
     if (artwork.id === artworkId) {
-        // 创建包含变更的*新*对象
-        return {...artwork, seen: nextSeen};
+      // 创建包含变更的*新*对象
+      return { ...artwork, seen: nextSeen };
     } else {
-        // 没有变更
-        return artwork;
+      // 没有变更
+      return artwork;
     }
-}));
+  }),
+);
 ```
 
 ## 用 State 响应输入
