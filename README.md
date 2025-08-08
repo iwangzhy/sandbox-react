@@ -706,3 +706,7 @@ export default function Clock(props) {
   return <h1 style={{ color: color }}>{props.time}</h1>;
 }
 ```
+
+## 在组件间共享状态
+
+把 state 放到它们的公共父级，再通过 props 将 state 传递给这两个组件。这被称为“状态提升”
