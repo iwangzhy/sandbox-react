@@ -802,3 +802,7 @@ react 可以通 key 来区分不同的组件。
 **key 不是全局唯一的，它只能指定 `父组件内部` 的顺序**
 
 key 不仅针对 react 组件，对于 DOM 同样也适用。如果 DOM 的 key 不同，react 会认为他们是不同的 DOM，会重新渲染 DOM。
+
+## 迁移状态逻辑至 Reducer 中
+
+对于拥有多个 state 的组件，可以将 state 的更新逻辑整合到一个 reducer 函数中。
