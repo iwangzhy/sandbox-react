@@ -676,24 +676,44 @@ setMyList(
 
 React 控制 UI 的方式是声明式的。
 
-只需要声明组件可以处于的不同状态，并根据用户的输入在它们之间切换。**根据 state 的值来写 jsx 代码**
+只需要声明组件可以处于的不同状态，并根据用户的输入在它们之间切换。
+
+**根据 state 的值来写 jsx代码**。 即我们只用编写 state 为不同的值时，所显示 UI 的代码。
+
+- 无数据
+- 输入中
+- 提交中
+- 成功
+- 错误
+
+官网中引入一个 [`状态机`](https://en.wikipedia.org/wiki/Finite-state_machine) 的概念。
 
 1. 确定需要用到哪些 state 变量
    - 这个 state 是否会导致矛盾
    - 相同的信息是否已经在另一个 state 变量中存在？
    - 是否可以通过另一个 state 变量计算出来？
 2. 确定是什么触发了这些 state 的改变(**涉及到了，事件处理函数**)
+   - 通过 `设置 state 变量`，来更新 UI
+3. 通过 useState 来表示内存中的 state
+   - 需要**让变化的部分尽可能的少**
+4. 删除任何不必要的 state 变量
+   - 避免 state 内容重复
+   - state 是否会导致矛盾？
+   - 相同的信息是否已经在另一个 state 变量中存在？
+   - 是否可以通过另一个 state 变量的相反值得到相同的信息？ （即是否可以通过其他 state 计算得到）
+5. 连接时间处理函数以设置 state
+   - 创建事件处理函数来更新 state 变量的值
 
 ## 选择 state 结构
 
-构建良好的 state 可以让组件变得易于修改和调试
+**构建良好的 state 可以让组件变得易于修改和调试**
 
 构建 state 的原则
 
-1. 合并关联的 state。（如，同时更新多个 state 时，考虑将这些 state 合并）
-2. 避免相互矛盾的 state。（一个 state 可以由另外的 state 计算得出）
-3. 避免冗余的 state。
-4. 避免重复的 state。
+1. 合并关联的 state。（如，**同时更新多个 state 时，考虑将这些 state 合并**）
+2. 避免相互矛盾的 state。（**一个 state 可以由另外的 state 计算得出**）
+3. 避免冗余的 state。（同上）
+4. 避免重复的 state。（同上）
 5. 避免深度嵌套的 state。（深度嵌套的 state 更新起来不方便）
 
 依赖组件 props 传递进来的变量渲染的属性，不应该作为 state 。
@@ -709,4 +729,76 @@ export default function Clock(props) {
 
 ## 在组件间共享状态
 
-把 state 放到它们的公共父级，再通过 props 将 state 传递给这两个组件。这被称为“状态提升”
+希望两个之间的状态始终同步更改。那么可以把 state 放到它们的公共父级，再通过 props 将 state 传递给这两个组件。这被称为“状态提升”
+
+对于每个独特的状态，都应该存在且只存在于一个指定的组件中作为 state。
+
+## 对 state 进行保留和重置
+
+各个组件的 state 是各自独立的。
+
+React 可以根据组件在 [`UI树`](https://zh-hans.react.dev/learn/understanding-your-ui-as-a-tree#the-render-tree)
+中的位置，来确定哪个 state 属于哪个组件。
+
+当向一个组件添加状态时，那么可能会认为状态“存在”在组件内。但实际上，状态是由 React 保存的。React
+通过组件在渲染树中的位置将它保存的每个状态与正确的组件关联起来。
+
+只有当在树中相同的位置渲染相同的组件时，React 才会一直保留着组件的 state。
+
+**只要一个组件还被渲染在 UI 树的相同位置，React 就会保留它的 state。** （组件没有被丢弃）
+
+如果它被移除，或者一个不同的组件被渲染在相同的位置，那么React 就会丢掉它的 state。
+
+**state被丢弃**
+
+```jsx
+// showB === false 时， react 会丢弃 Counter 组件的 state
+{
+  showB && <Counter />;
+}
+```
+
+相同位置的相同组件会使得 state 被保留下来。
+
+**state被保留**
+
+```jsx
+{
+  isFancy ? <Counter isFancy={true} /> : <Counter isFancy={false} />;
+}
+```
+
+**对 React 来说重要的是组件在 UI 树中的位置,而不是在 JSX 中的位置！**
+
+相同位置的不同组件会使 state 重置
+
+```jsx
+{
+  isPaused ? <p>待会见！</p> : <Counter />;
+}
+```
+
+当你在相同位置渲染不同的组件时，组件的整个子树都会被重置。
+
+react 可以通 key 来区分不同的组件。
+
+```jsx
+<div>
+  {isPlayerA ? (
+    <Counter key="Taylor" person="Taylor" />
+  ) : (
+    <Counter key="Sarah" person="Sarah" />
+  )}
+  <button
+    onClick={() => {
+      setIsPlayerA(!isPlayerA);
+    }}
+  >
+    下一位玩家！
+  </button>
+</div>
+```
+
+**key 不是全局唯一的，它只能指定 `父组件内部` 的顺序**
+
+key 不仅针对 react 组件，对于 DOM 同样也适用。如果 DOM 的 key 不同，react 会认为他们是不同的 DOM，会重新渲染 DOM。
