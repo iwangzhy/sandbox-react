@@ -1128,3 +1128,70 @@ const dispatch = useTasksDispatch();
     - 你也可以导出像 useTasks 和 useTasksDispatch 这样的**自定义 Hook**。
 - 你可以在你的应用程序中大量使用 context 和 reducer 的组合。
 
+## 脱围机制
+
+脱围机制指的是：
+
+> 有些组件可能需要控制和同步 React 之外的系统。例如，你可能需要使用浏览器 API 聚焦输入框，或者在没有 React
+> 的情况下实现视频播放器，或者连接并监听远程服务器的消息。在本章中，你将学习到一些脱围机制，让你可以“走出” React
+> 并连接到外部系统。大多数应用逻辑和数据流不应该依赖这些功能。
+
+## 使用 ref 引用值
+
+希望组件记住某些信息，但又不想这些信息触发新的渲染时，可以使用 `ref`
+
+```jsx
+import { useRef } from 'react';
+
+const ref = useRef(0);
+```
+
+```
+{
+  current: 0
+}
+```
+
+可以使用 ref.current 属性访问该 ref 的当前值，这个值是可变的（可以随意修改。）
+
+**ref 变化时，不会触发组件重新渲染。**
+
+ref 与 state 的不同之处
+
+- `useRef(initialValue)` 返回 `{current:initailValue}`
+  `useState(initialValue)` 返回 `[value,setValue]`
+- ref 变化时不会触发渲染，state 变化时，会触发渲染。
+- ref 可以直接修改 ref.current, state 必须提供 setState 函数修改
+- 不应该在渲染期间读写 ref.current, 可以随时读写 state。
+
+useRef 内部实现
+
+```js
+// React 内部
+function useRef(initialValue) {
+  const [ref, unused] = useState({ current: initialValue });
+  return ref;
+}
+```
+
+何时使用 ref ？ 当组件需要跳出 react 并与外部 API 通信时使用 ref。
+
+- **存储 timeoutID**
+- **存储和操作 DOM 元素**
+- **存储不需要被用来计算 JSX 的其他对象**。
+
+ref 的最佳实践
+
+- 将 ref 视为脱围机制
+- 不要在渲染过程中读写 ref.current. 如果渲染过程中需要某些信息，请使用 state 代替。
+
+ref 本身是一个普通的 JavaScript 对象（ref 的修改立即可见，不像 state 那样是异步的）。
+
+当你使用 ref 时，也无需担心 避免变更。只要你改变的对象不用于渲染，React 就不会关心你对 ref 或其内容做了什么。
+
+你可以将 ref 指向任何值。但是，ref 最常见的用法是访问 DOM 元素。
+
+`<div ref={myRef}>` React 会将相应的 DOM 元素放入 myRef.current 中。
+当元素从 DOM 中删除时，React 会将 myRef.current 更新为 null。
+
+

@@ -2,7 +2,10 @@ import { createContext, useContext, useReducer } from "react";
 
 const TasksContext = createContext(null);
 const TasksDispatchContext = createContext(null);
-
+/*
+   在所有的 context 和 reducer 连接部分都在 TasksContext.js 中。
+   这保持了组件的干净和整洁，让我们专注于它们显示的内容，而不是它们从哪里获得数据：
+ */
 export function TasksProvider({ children }) {
   // 创建一个 reducer， 将 tasks 的修改逻辑集中起来，
   const [tasks, dispatch] = useReducer(tasksReducer, initialTasks);
