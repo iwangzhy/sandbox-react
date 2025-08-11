@@ -954,3 +954,140 @@ function dispatch(action) {
   return newState;
 }
 ```
+
+## 使用 Context 深层传递参数
+
+Context 允许父组件向其下层无论多深的任何组件提供信息，而无需通过 props 显式传递。
+
+虽然 props 可以将 state 传递给子组件，一旦层级过深， props 就会异常复杂。
+
+Context 让父组件**可以为它下面的整个组件树提供数据**。
+
+1. 创建一个 context (`createContext(1)`)
+2. 在需要数据的组件内使用刚刚创建的 context `const level = useContext(LevelContext);`
+3. 在指定数据的组件中提供这个 context `<LevelContext value={level}>{children}</LevelContext`
+   **组件会使用 UI树中在它上层最近的那个 <LevelContext> 传递过来的值**
+
+可以在提供 context 的组件和使用它的组件之间的层级**插入任意数量的组件**。
+
+Context 让你可以编写“适应周围环境”的组件，并且根据 在哪 （或者说 在哪个 context 中）来渲染它们不同的样子。
+
+不同的 React context 不会覆盖彼此。
+
+Context 的使用场景
+
+- 主题
+- 当前账户：当前登录的账号信息等
+- 路由
+- 状态管理
+
+## 使用 Reducer 和 Context 拓展你的应用
+
+Reducer 可以**整合组件的状态更新逻辑**。Context 可以**将信息深入传递给其他组件**。你可以组合使用它们来共同管理一个复杂页面的状态。
+
+1. 创建 context
+
+```jsx
+const [tasks, dispatch] = useReducer(tasksReducer, initialTasks);
+```
+
+2. 将 state 和 dispatch 函数放入 context
+
+```jsx
+export const TasksContext = createContext(null);
+export const TasksDispatchContext = createContext(null);
+```
+
+3. 在组件树中的任何地方使用 context
+
+```jsx
+<TasksContext value={tasks}>
+  <TasksDispatchContext value={dispatch}>
+    <h1>Day off in Kyoto</h1>
+    <AddTask/>
+    <TaskList/>
+  </TasksDispatchContext>
+</TasksContext>
+```
+
+```jsx
+export default function AddTask() {
+  const [text, setText] = useState('');
+  const dispatch = useContext(TasksDispatchContext);
+  // ...
+  return (
+    // ...
+    <button onClick={() => {
+      setText('');
+      dispatch({
+        type: 'added',
+        id: nextId++,
+        text: text,
+      });
+    }}>Add</button>
+// ...
+  )
+}
+```
+
+将相关逻辑迁移到一个文件当中
+
+```TasksContext.js
+import { createContext } from 'react';
+
+export const TasksContext = createContext(null);
+export const TasksDispatchContext = createContext(null);
+
+// 声明一个新的 TaskContext 组件
+// 1. 管理 reducer 状态
+// 2. 提供现有的 context 给组件树
+// 3. 它将把 children 作为 prop，所以可以传递 JSX
+export function TasksProvider({ children }) {
+  const [tasks, dispatch] = useReducer(
+    tasksReducer,
+    initialTasks
+  );
+
+  return (
+    <TasksContext value={tasks}>
+      <TasksDispatchContext value={dispatch}>
+        {children}
+      </TasksDispatchContext>
+    </TasksContext>
+  );
+}
+
+function tasksReducer(tasks, action) {
+  switch (action.type) {
+    case 'added': {
+      return [...tasks, {
+        id: action.id,
+        text: action.text,
+        done: false
+      }];
+    }
+    case 'changed': {
+      return tasks.map(t => {
+        if (t.id === action.task.id) {
+          return action.task;
+        } else {
+          return t;
+        }
+      });
+    }
+    case 'deleted': {
+      return tasks.filter(t => t.id !== action.id);
+    }
+    default: {
+      throw Error('Unknown action: ' + action.type);
+    }
+  }
+}
+
+const initialTasks = [
+  { id: 0, text: 'Philosopher’s Path', done: true },
+  { id: 1, text: 'Visit the temple', done: false },
+  { id: 2, text: 'Drink matcha', done: false }
+];
+
+```
