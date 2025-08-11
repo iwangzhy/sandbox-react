@@ -1194,4 +1194,23 @@ ref 本身是一个普通的 JavaScript 对象（ref 的修改立即可见，不
 `<div ref={myRef}>` React 会将相应的 DOM 元素放入 myRef.current 中。
 当元素从 DOM 中删除时，React 会将 myRef.current 更新为 null。
 
+## 使用 ref 操作 DOM
 
+获取指向节点的 ref
+
+```jsx
+import { useRef } from 'react';
+
+const myRef = useRef(null);
+
+// 告诉 React 将这个 <div> 的 DOM 节点放入 myRef.current。
+<div ref={myRef}/>
+```
+
+当 React 为这个 <div> 创建一个 DOM 节点时，React 会把对该节点的引用放入 myRef.current。然后，你可以从 事件处理器 访问此 DOM
+节点，并使用在其上定义的内置浏览器 API。
+
+```jsx
+// 你可以使用任意浏览器 API，例如：
+myRef.current.scrollIntoView();
+```
