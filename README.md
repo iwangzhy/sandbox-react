@@ -1030,7 +1030,12 @@ export default function AddTask() {
 }
 ```
 
-将相关逻辑迁移到一个文件当中
+将相关逻辑迁移到一个文件当中 ( `TasksContext.js`)
+
+在这个文件中定义
+
+- reducer
+- context
 
 ```TasksContext.js
 import { createContext } from 'react';
@@ -1091,3 +1096,35 @@ const initialTasks = [
 ];
 
 ```
+
+自定义 hook
+
+```jsx
+export function useTasks() {
+  return useContext(TasksContext);
+}
+
+export function useTasksDispatch() {
+  return useContext(TasksDispatchContext);
+}
+```
+
+使用自定义 hook
+
+```jsx
+const tasks = useTasks();
+const dispatch = useTasksDispatch();
+```
+
+**cap**
+
+- 你可以将 reducer 与 context 相结合，让任何组件读取和更新它的状态。
+- 为子组件提供 state 和 dispatch 函数：
+    - 创建两个 context (一个用于 state,一个用于 dispatch 函数)。
+    - 让组件的 context 使用 reducer。
+    - 使用组件中需要读取的 context。
+- 你可以通过将所有传递信息的代码移动到单个文件中来进一步整理组件。
+    - 你可以导出一个像 TasksProvider 可以提供 context 的组件。
+    - 你也可以导出像 useTasks 和 useTasksDispatch 这样的**自定义 Hook**。
+- 你可以在你的应用程序中大量使用 context 和 reducer 的组合。
+

@@ -1,7 +1,7 @@
-import { createContext, useReducer } from "react";
+import { createContext, useContext, useReducer } from "react";
 
-export const TasksContext = createContext(null);
-export const TasksDispatchContext = createContext(null);
+const TasksContext = createContext(null);
+const TasksDispatchContext = createContext(null);
 
 export function TasksProvider({ children }) {
   // 创建一个 reducer， 将 tasks 的修改逻辑集中起来，
@@ -13,6 +13,14 @@ export function TasksProvider({ children }) {
       <TasksDispatchContext value={dispatch}>{children}</TasksDispatchContext>
     </TasksContext>
   );
+}
+
+export function useTasks() {
+  return useContext(TasksContext);
+}
+
+export function useTasksDispatch() {
+  return useContext(TasksDispatchContext);
 }
 
 function tasksReducer(tasks, action) {
