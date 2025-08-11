@@ -806,3 +806,151 @@ key 不仅针对 react 组件，对于 DOM 同样也适用。如果 DOM 的 key 
 ## 迁移状态逻辑至 Reducer 中
 
 对于拥有多个 state 的组件，可以将 state 的更新逻辑整合到一个 reducer 函数中。
+
+- 将设置状态的逻辑修改成 dispatch 的一个 action
+
+> 使用 reducer 管理状态与直接设置状态略有不同。它不是通过设置状态来告诉 React “要做什么”，而是通过事件处理程序 dispatch 一个
+> “action” 来指明 “用户刚刚做了什么”。（**而状态更新逻辑则保存在其他地方！**）
+
+```jsx
+function handleAddTask(text) {
+  setTasks([
+    ...tasks,
+    {
+      id: nextId++,
+      text: text,
+      done: false,
+    },
+  ]);
+}
+
+function handleChangeTask(task) {
+  setTasks(
+    tasks.map((t) => {
+      if (t.id === task.id) {
+        return task;
+      } else {
+        return t;
+      }
+    }),
+  );
+}
+
+function handleDeleteTask(taskId) {
+  setTasks(tasks.filter((t) => t.id !== taskId));
+}
+```
+
+不再通过事件处理器直接设置 task，而是 dispatch 一个 action 到 reducer 函数中。
+
+```jsx
+function handleAddTask(text) {
+  dispatch({
+    type: "added",
+    id: nextId++,
+    text: text,
+  });
+}
+
+function handleChangeTask(task) {
+  dispatch({
+    type: "changed",
+    task: task,
+  });
+}
+```
+
+action 对象，结构由开发者自行决定。
+
+action 对于应该表明发生了什么事情。 通常包含一个 type 字段，用来描述发生了什么。
+
+```jsx
+function handleDeleteTask(taskId) {
+  dispatch(
+    // action 对象，结构由开发者自行决定
+    // 应该表明发生了什么事情
+    // 通常包含一个 type 字段，用来描述发生了什么
+    {
+      type: "deleted",
+      id: taskId,
+    },
+  );
+}
+```
+
+- 编写一个 reducer 函数
+
+reducer 函数，就是存放状态逻辑的地方。接收 2 个参数， state 和 action 对象，返回更新之后的 state。
+
+```jsx
+function yourReducer(state, action) {
+  // update state 的逻辑
+
+  return newState;
+}
+```
+
+example:
+
+```jsx
+function tasksReducer(tasks, action) {
+  if (action.type === "added") {
+    return [
+      ...tasks,
+      {
+        id: action.id,
+        text: action.text,
+        done: false,
+      },
+    ];
+  } else if (action.type === "changed") {
+    return tasks.map((t) => {
+      if (t.id === action.task.id) {
+        return action.task;
+      } else {
+        return t;
+      }
+    });
+  } else if (action.type === "deleted") {
+    return tasks.filter((t) => t.id !== action.id);
+  } else {
+    throw Error("未知 action: " + action.type);
+  }
+}
+```
+
+- 在组件中使用 reducer
+
+```jsx
+import { useReducer } from "react";
+
+const [tasks, dispatch] = useReducer(tasksReducer, initialTasks);
+```
+
+useReducer 接收 2 个参数，reducer 函数，初始 state。返回一个由状态的值，一个dispatch 函数。
+
+**dispatch 函数的参数与 reducer 函数的 action 参数是用一个东西。**，即调用 dispatch 时，会把参数传入 reducer 函数。
+
+```jsx
+// 最佳实践：统一的 action 结构
+const action = {
+  type: "ACTION_TYPE", // 唯一标识（必选）
+  payload: data, // 负载数据（可选）
+  meta: {}, // 元信息（可选）
+};
+
+dispatch(action); // 送出
+reducer(state, action); // 接收同一个 action
+```
+
+**dispatch 实现**
+
+```jsx
+function dispatch(action) {
+  // 调用 reducer 函数，传入当前 state 和 action
+  const newState = tasksReducer(tasks, action);
+  // 更新 state
+  setTasks(newState);
+  return newState;
+}
+```
