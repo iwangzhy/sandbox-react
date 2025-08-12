@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useTasks, useTasksDispatch } from "../contexts/TaskContext.jsx";
+import { useTaskDispatch, useTasks } from "./TaskContext.jsx";
 
 export default function TaskList() {
   const tasks = useTasks();
@@ -16,7 +16,7 @@ export default function TaskList() {
 
 function Task({ task }) {
   const [isEditing, setIsEditing] = useState(false);
-  const dispatch = useTasksDispatch();
+  const dispatch = useTaskDispatch();
   let taskContent;
   if (isEditing) {
     taskContent = (

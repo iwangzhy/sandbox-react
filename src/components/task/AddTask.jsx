@@ -1,20 +1,15 @@
 import { useState } from "react";
-import { useTasksDispatch } from "../contexts/TaskContext.jsx";
+import { useTaskDispatch } from "./TaskContext.jsx";
 
 export default function AddTask() {
-  // text 是组件内部的 state
   const [text, setText] = useState("");
-
-  // 使用父组件的 context
-  const dispatch = useTasksDispatch();
+  const dispatch = useTaskDispatch();
   return (
     <>
       <input
         placeholder="add task"
         value={text}
-        onChange={(e) => {
-          setText(e.target.value);
-        }}
+        onChange={(e) => setText(e.target.value)}
       />
       <button
         onClick={() => {
@@ -31,4 +26,5 @@ export default function AddTask() {
     </>
   );
 }
+
 let nextId = 3;

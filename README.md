@@ -11,15 +11,15 @@ React **组件的名称必须大写**
 标签和 return 不再一行，则必须使**用括号包裹**。
 
 ```tsx
-return <img src="https://i.imgur.com/MK3eW3As.jpg" alt="Katherine Johnson" />;
+return <img src="https://i.imgur.com/MK3eW3As.jpg" alt="Katherine Johnson"/>;
 ```
 
 ```tsx
 return (
-  // 标签与 return 关键字不在同一行，需要使用括号包裹
-  <div>
-    <img src="https://i.imgur.com/MK3eW3As.jpg" alt="Katherine Johnson" />
-  </div>
+    // 标签与 return 关键字不在同一行，需要使用括号包裹
+    <div>
+        <img src="https://i.imgur.com/MK3eW3As.jpg" alt="Katherine Johnson"/>
+    </div>
 );
 ```
 
@@ -86,7 +86,7 @@ export default function App() {
 export default function App() {
   const src = "https://i.imgur.com/MK3eW3As.jpg";
   const alt = "Katherine Johnson";
-  return <img className="avatar" src={src} alt={alt} />;
+  return <img className="avatar" src={src} alt={alt}/>;
 }
 ```
 
@@ -416,14 +416,14 @@ State 是隔离且私有的
 组件在显示到屏幕之前，必须被 react 渲染。
 
 1. 触发渲染
-   - 组件的初次渲染
-   - 组件的 state 或 props 发生变化
+    - 组件的初次渲染
+    - 组件的 state 或 props 发生变化
 2. 渲染组件（**整个过程是递归的**）
-   - 在进行初次渲染时，react 会调用根组件
-   - 对于后续的渲染，react 会调用内部状态更新触发了渲染的函数组件。
+    - 在进行初次渲染时，react 会调用根组件
+    - 对于后续的渲染，react 会调用内部状态更新触发了渲染的函数组件。
 3. 提交到 DOM
-   - 对于初次渲染，react 会使用 `appendChild()` DOM API 将其创建的所有 DOM 节点放在屏幕上
-   - 对于重新渲染，react 将应用最少的必要操作(在渲染时计算)，以使得 DOM 与最新的渲染输出相互匹配。
+    - 对于初次渲染，react 会使用 `appendChild()` DOM API 将其创建的所有 DOM 节点放在屏幕上
+    - 对于重新渲染，react 将应用最少的必要操作(在渲染时计算)，以使得 DOM 与最新的渲染输出相互匹配。
 
 初次渲染：**当应用启动时，会触发初次渲染**。通过调用 `createRoot` 方法并传入目标 DOM 节点，然后用你的组件调用 render 函数完成的。
 
@@ -689,20 +689,20 @@ React 控制 UI 的方式是声明式的。
 官网中引入一个 [`状态机`](https://en.wikipedia.org/wiki/Finite-state_machine) 的概念。
 
 1. 确定需要用到哪些 state 变量
-   - 这个 state 是否会导致矛盾
-   - 相同的信息是否已经在另一个 state 变量中存在？
-   - 是否可以通过另一个 state 变量计算出来？
+    - 这个 state 是否会导致矛盾
+    - 相同的信息是否已经在另一个 state 变量中存在？
+    - 是否可以通过另一个 state 变量计算出来？
 2. 确定是什么触发了这些 state 的改变(**涉及到了，事件处理函数**)
-   - 通过 `设置 state 变量`，来更新 UI
+    - 通过 `设置 state 变量`，来更新 UI
 3. 通过 useState 来表示内存中的 state
-   - 需要**让变化的部分尽可能的少**
+    - 需要**让变化的部分尽可能的少**
 4. 删除任何不必要的 state 变量
-   - 避免 state 内容重复
-   - state 是否会导致矛盾？
-   - 相同的信息是否已经在另一个 state 变量中存在？
-   - 是否可以通过另一个 state 变量的相反值得到相同的信息？ （即是否可以通过其他 state 计算得到）
+    - 避免 state 内容重复
+    - state 是否会导致矛盾？
+    - 相同的信息是否已经在另一个 state 变量中存在？
+    - 是否可以通过另一个 state 变量的相反值得到相同的信息？ （即是否可以通过其他 state 计算得到）
 5. 连接时间处理函数以设置 state
-   - 创建事件处理函数来更新 state 变量的值
+    - 创建事件处理函数来更新 state 变量的值
 
 ## 选择 state 结构
 
@@ -754,7 +754,7 @@ React 可以根据组件在 [`UI树`](https://zh-hans.react.dev/learn/understand
 ```jsx
 // showB === false 时， react 会丢弃 Counter 组件的 state
 {
-  showB && <Counter />;
+  showB && <Counter/>;
 }
 ```
 
@@ -764,7 +764,7 @@ React 可以根据组件在 [`UI树`](https://zh-hans.react.dev/learn/understand
 
 ```jsx
 {
-  isFancy ? <Counter isFancy={true} /> : <Counter isFancy={false} />;
+  isFancy ? <Counter isFancy={true}/> : <Counter isFancy={false}/>;
 }
 ```
 
@@ -774,7 +774,7 @@ React 可以根据组件在 [`UI树`](https://zh-hans.react.dev/learn/understand
 
 ```jsx
 {
-  isPaused ? <p>待会见！</p> : <Counter />;
+  isPaused ? <p>待会见！</p> : <Counter/>;
 }
 ```
 
@@ -785,9 +785,9 @@ react 可以通 key 来区分不同的组件。
 ```jsx
 <div>
   {isPlayerA ? (
-    <Counter key="Taylor" person="Taylor" />
+    <Counter key="Taylor" person="Taylor"/>
   ) : (
-    <Counter key="Sarah" person="Sarah" />
+    <Counter key="Sarah" person="Sarah"/>
   )}
   <button
     onClick={() => {

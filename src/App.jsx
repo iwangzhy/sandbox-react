@@ -1,9 +1,7 @@
 import "./App.css";
 // import "./styles.css";
-import { StopWatch } from "./components/StopWatch.jsx";
+import TaskApp from "./components/task/TaskApp.jsx";
 
-function App() {
-  return <StopWatch />;
+export default function App() {
+  return <TaskApp />;
 }
-
-export default App;
