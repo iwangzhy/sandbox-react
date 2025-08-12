@@ -1,7 +1,7 @@
 import "./App.css";
 // import "./styles.css";
-import TaskApp from "./components/task/TaskApp.jsx";
+import PlaygroundApp from "./components/effect/Playground.jsx";
 
 export default function App() {
-  return <TaskApp />;
+  return <PlaygroundApp />;
 }

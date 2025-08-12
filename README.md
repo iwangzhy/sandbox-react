@@ -1423,3 +1423,206 @@ export default function VideoPlayer() {
   )
 }
 ```
+
+## 使用 Effect 进行同步
+
+Effect 允许你在渲染结束后执行一些代码，以便将组件与 React 外部的某个系统相同步。
+
+**Effect 允许你指定由渲染自身，而不是特定事件引起的副作用。**
+
+Effect 在 提交 结束后、页面更新后运行。
+
+**不要急着在你的组件中使用 Effect**。记住，Effect 通常用于暂时“跳出” React 并与一些 **外部** 系统进行同步。
+
+编写 Effect
+
+1. **声明 Effect**
+2. **指定 Effect 依赖。** 大多数 Effect 应该按需运行，而不是在每次渲染后都运行。
+3. **按需添加清理（cleanup）函数。** 一些 Effect 需要指定如何停止、撤销，或者清除它们所执行的操作。
+
+每当你的组件渲染时，React 会先更新页面，然后再运行 useEffect 中的代码。
+换句话说，**useEffect 会“延迟”一段代码的运行，直到渲染结果反映在页面上**。
+
+```jsx
+/*
+ * 执行过程
+ * 1. react 渲染 videoplyer 组件，
+ * 2. 执行 useEffect 里的代码
+ * 3. 根据 isPlaying 的值调用 play 或者 pause 方法
+ * */
+function VideoPlayer({ src, isPlaying }) {
+  const ref = useRef(null);
+  // 再渲染期间 对 DOM 节点进行操作这是不允许的。
+  // if (isPlaying) {
+  //   ref.current.play();
+  // } else {
+  //   ref.current.pause();
+  // }
+  // 解决方法是使用 useEffect 包裹起来，把它分离到渲染逻辑的计算过程之外。
+  // useEffect 里面的代码会在渲染结束之后再执行
+  useEffect(() => {
+    if (isPlaying) {
+      ref.current.play();
+    } else {
+      ref.current.pause();
+    }
+    /*
+      指定 [isPlaying] 作为依赖数组会告诉 React：如果 isPlaying 与上次渲染时相同，
+      就跳过重新运行 Effect。这样一来，输入框的输入不会触发 Effect 重新运行，
+      只有按下播放/暂停按钮会触发。
+    */
+  }, [isPlaying]);
+  return <video ref={ref} src={src} loop playsInline/>;
+}
+```
+
+**需要注意的是，如果 useEffect 里面的代码修改 state，会导致页面重新渲染，这个就可能会导致页面无限重新渲染，这个取决于
+useEffect 的配置（Effect的依赖项）**。 因此，Effect 应该用于将你的组件与一个外部的系统保持同步。
+
+依赖数组可以包含多个依赖项。只有当你指定的 **所有** 依赖项的值都**与上一次渲染时完全相同**，React 才会 **跳过重新运行该
+Effect**。
+
+```jsx
+useEffect(() => {
+  // 这里的代码会在每次渲染后运行
+});
+
+useEffect(() => {
+  // 这里的代码只会在组件挂载（首次出现）时运行
+}, []);
+
+useEffect(() => {
+  // 这里的代码不但会在组件挂载时运行，而且当 a 或 b 的值自上次渲染后发生变化后也会运行
+}, [a, b]);
+```
+
+```jsx
+useEffect(() => {
+  const connection = createConnection();
+  connection.connect();
+}, []);
+```
+
+由于 Effect 中的代码没有使用任何 props 或 state，所以依赖数组为空数组 []。
+这告诉 React 仅在组件“挂载”（即首次显示在页面上）时运行此代码。
+
+可以在 Effect 中返回一个 清理（cleanup）函数 。
+**React 会在每次 Effect 重新运行之前调用清理函数，并在组件卸载（被移除）时最后一次调用清理函数**
+
+```jsx
+useEffect(() => {
+  const connection = createConnection();
+  connection.connect();
+  return () => {
+    connection.disconnect();
+  };
+}, []);
+```
+
+管理非 React 小部件
+
+对于运行重复调用的方法，可以不写 clean 函数，对于不允许重复调用的方法，必须写 clean 函数。
+
+```jsx
+useEffect(() => {
+  const map = mapRef.current;
+  map.setZoomLevel(zoomLevel);
+}, [zoomLevel]);
+```
+
+```jsx
+useEffect(() => {
+  const dialog = dialogRef.current;
+  dialog.showModal();
+  return () => dialog.close();
+}, []);
+```
+
+订阅事件，如果 effect 订阅了某些事件，clean 函数应该退订这些事件。
+
+```jsx
+useEffect(() => {
+  function handleScroll(e) {
+    console.log(window.scrollX, window.scrollY);
+  }
+
+  window.addEventListener('scroll', handleScroll);
+  return () => window.removeEventListener('scroll', handleScroll);
+}, []);
+```
+
+触发动画，如果 effect 触发了一些动画， clean 函数应该将动画重置为初始状态。
+
+```jsx
+useEffect(() => {
+  const node = ref.current;
+  node.style.opacity = 1; // 触发动画
+  return () => {
+    node.style.opacity = 0; // 重置为初始值
+  };
+}, []);
+```
+
+获取数据，如果 effect 需要获取数据，clean 函数应该中止或忽略其结果。
+
+```jsx
+useEffect(() => {
+  let ignore = false;
+
+  async function startFetching() {
+    const json = await fetchTodos(userId);
+    if (!ignore) {
+      setTodos(json);
+    }
+  }
+
+  startFetching();
+
+  return () => {
+    ignore = true;
+  };
+}, [userId]);
+```
+
+发送分析报告
+
+```jsx
+useEffect(() => {
+  logVisit(url); // 发送 POST 请求
+}, [url]);
+```
+
+**某些逻辑应该只在应用启动时运行一次。你可以将它放在组件外部：**
+
+**如果重新挂载破坏了应用的逻辑，通常便暴露了存在的 bug。**
+
+**React 总是在执行下一轮渲染的 Effect 之前清理上一轮渲染的 Effect。**
+
+**每个 Effect 都会“捕获”它对应渲染时的 text 值。**
+
+```jsx
+function Playground() {
+  const [text, setText] = useState("");
+  useEffect(() => {
+    function onTimeout() {
+      console.log("⏰ " + text);
+    }
+
+    console.log('🔵 调度 "' + text + '" 日志');
+    const timeoutId = setTimeout(onTimeout, 3000);
+    return () => {
+      console.log('🟡 取消 "' + text + '" 日志');
+      clearTimeout(timeoutId);
+    };
+  }, [text]);
+  return (
+    <>
+      <label>
+        日志内容：{" "}
+        <input value={text} onChange={(e) => setText(e.target.value)}/>
+      </label>
+      <h1>{text}</h1>
+    </>
+  );
+}
+```
