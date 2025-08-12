@@ -1199,18 +1199,227 @@ ref 本身是一个普通的 JavaScript 对象（ref 的修改立即可见，不
 获取指向节点的 ref
 
 ```jsx
+// 引入 useRef hook 
 import { useRef } from 'react';
 
+// 在组件中声明一个 ref
 const myRef = useRef(null);
 
 // 告诉 React 将这个 <div> 的 DOM 节点放入 myRef.current。
+// 将 ref 作为 ref 属性值传递给想要获取 DOM 节点的 JSX 标签。
 <div ref={myRef}/>
 ```
 
-当 React 为这个 <div> 创建一个 DOM 节点时，React 会把对该节点的引用放入 myRef.current。然后，你可以从 事件处理器 访问此 DOM
-节点，并使用在其上定义的内置浏览器 API。
+当 React 为这个 **<div> 创建一个 DOM 节点时，React 会把对该节点的引用放入 myRef.current**。然后，你可以从 **事件处理器**
+访问此
+DOM 节点，并使用在其上定义的内置浏览器 API。
 
 ```jsx
 // 你可以使用任意浏览器 API，例如：
 myRef.current.scrollIntoView();
+```
+
+**使文本输入框获得焦点**
+
+```jsx
+import { useRef } from 'react';
+
+export default function Form() {
+  // 声明 inputRef
+  const inputRef = useRef(null);
+
+  function handleClick() {
+    /*在事件处理器中访问 DOM 节点*/
+    inputRef.current.focus();
+  }
+
+  return (
+    <>
+      {/*将声明的 inputRef 作为 input 的 ref 属性值*/}
+      {/* react 会把 input 的 DOM 放入 inputRef.current 中*/}
+      <input ref={inputRef}/>
+      {/* 将事件处理器传递给 button */}
+      <button onClick={handleClick}>
+        聚焦输入框
+      </button>
+    </>
+  );
+}
+```
+
+**一个组件中可以有多个 ref。**
+
+**Hook 只能在组件的顶层被调用**。 不能在循环语句、条件语句、或 map() 函数中调用 useRef。
+
+如何使用 ref 回调管理 ref 列表 ？
+> **将函数传递给 ref 属性（ref回调）**当需要设置 ref 时，React 将传入 DOM 节点来调用你的 ref 回调，并在需要清除它时传入 null
+> 。这使你可以维护自己的数组或 Map，并通过其索引或某种类型的 ID 访问任何 ref。
+
+**ref回调负责更新 ref 值**
+
+```jsx
+<ul>
+  {catList.map((cat) => (
+    <li
+      key={cat}
+      {/* 在元素被挂载时调用一次，参数是当前  DOM， 在元素被卸载时调用一次，参数是 null */}
+      ref={(node) => {
+        const map = getMap()
+        map.set(cat, node)
+
+        return () => {
+          map.delete(cat)
+        }
+      }}
+    >
+      <img src={cat}/>
+    </li>
+  ))}
+</ul>
+```
+
+访问另一个组件的 DOM 节点。（将 ref 通过 props 传递给子组件）
+
+```jsx
+import { useRef } from 'react';
+
+function MyInput({ ref }) {
+  // 绑定 ref 属性值
+  return <input ref={ref}/>;
+}
+
+function MyForm() {
+  // 在父组件中创建 ref
+  const inputRef = useRef(null);
+  // 通过 props 传递给子组件
+  return <MyInput ref={inputRef}/>
+}
+```
+
+这样就有一个问题，父组件可以随意修改子组件 input DOM。**可以通过 useImperativeHandle 来限制**
+
+useImperativeHandle 是 React 中的一个 Hook，它能让你自定义由 ref 暴露出来的句柄。
+
+```jsx
+import { useRef, useImperativeHandle } from "react";
+
+function MyInput({ ref }) {
+
+  // realInputRef 保存了实际的 input DOM 节点
+  const realInputRef = useRef(null);
+  // useImperativeHandle 指示 react 将指定的对象作为父节点的 ref 值。
+  useImperativeHandle(ref, () => ({
+    // 只暴露 focus，没有别的
+    focus() {
+      realInputRef.current.focus();
+    },
+  }));
+  return <input ref={realInputRef}/>;
+};
+
+export default function Form() {
+  const inputRef = useRef(null);
+
+  function handleClick() {
+    inputRef.current.focus();
+  }
+
+  return (
+    <>
+      <MyInput ref={inputRef}/>
+      <button onClick={handleClick}>聚焦输入框</button>
+    </>
+  );
+}
+```
+
+下面的例子很好的说明了 `useImperativeHandle` 的用法。
+
+向父组件暴露指定方法（这个方法可以自定义实现）
+
+```jsx
+function Post({ ref }) {
+  const commentsRef = useRef(null);
+  const addCommentRef = useRef(null);
+
+  useImperativeHandle(ref, () => {
+    return {
+      scrollAndFocusAddComment() {
+        commentsRef.current.scrollToBottom();
+        addCommentRef.current.focus();
+      }
+    };
+  }, []);
+
+  return (
+    <>
+      <article>
+        <p>Welcome to my blog!</p>
+      </article>
+      <CommentList ref={commentsRef}/>
+      <AddComment ref={addCommentRef}/>
+    </>
+  );
+};
+```
+
+React 何时添加 refs？**通常，你将从事件处理器访问 refs。**
+
+flushSync 可以强制 React 同步更新（“刷新”）DOM。 （从 react-dom 导入 flushSync ）。
+
+使用时将 state 更新包裹 到 flushSync 调用中：
+
+```jsx
+// 会同步更新 DOM 
+flushSync(() => {
+  setTodos([...todos, newTodo]);
+});
+listRef.current.lastChild.scrollIntoView();
+```
+
+使用 refs 操作 DOM 的最佳实践。
+
+- 管理焦点、滚动位置或调用 React 未暴露的浏览器 API。
+- **避免更改由 React 管理的 DOM 节点。**
+- 你可以安全地修改 React 没有理由更新的部分 DOM。
+
+下面的例子：React 触发重新渲染时，并不会重新渲染 video 元素
+
+```jsx
+import { useState, useRef } from 'react';
+
+export default function VideoPlayer() {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const ref = useRef(null)
+
+  function handleClick() {
+    const nextIsPlaying = !isPlaying;
+    setIsPlaying(nextIsPlaying);
+    if (nextIsPlaying) {
+      ref.current.play();
+    } else {
+      ref.current.pause();
+    }
+  }
+
+  return (
+    <>
+      <button onClick={handleClick}>
+        {isPlaying ? '暂停' : '播放'}
+      </button>
+      {/* React 触发重新渲染时，并不会重新渲染 video 元素 */}
+      <video
+        width="250"
+        ref={ref}
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
+      >
+        <source
+          src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+          type="video/mp4"
+        />
+      </video>
+    </>
+  )
+}
 ```
