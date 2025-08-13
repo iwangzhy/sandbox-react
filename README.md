@@ -1626,3 +1626,55 @@ function Playground() {
   );
 }
 ```
+
+## 你可能不需要 Effect
+
+没有必要使用 Effect 的两种情况
+
+- 不必使用 Effect 来转换渲染所需的数据。
+    - （想在展示一个列表前先做筛选）如显示的数据需要通过转换 state 得到，如果把转换逻辑写到 useEffect 中，就会导致页面渲染 2
+      次。（state 变化后，页面会渲染一次，页面渲染好后，会执行 effect ，如果在 effect 中修改了 state， 那么这个页面会再次渲染页面
+      **useEffect 本身不会导致页面重新渲染**）
+- 不必使用 Effect 来处理用户事件。
+    - 在 effect 中执行不允许重复的事情，如发送 `/api/buy` 请求. 在严格模式下，会导致请求 2 次。 （虽然生产环境只会执行一次，但是还是不要在
+      effect 中执行不允许重复执行的操作） **useEffect 最好是一个纯函数**
+
+Effect 推荐用法
+
+- 保持 jQuery 组件和 react state 之间的同步
+- 获取数据（通过 url 获取数据，如搜索框的 state 变化，执行 useEffect，修改 表格的 state，触发页面重新渲染）
+
+**如果一个值可以基于现有的 props 或 state 计算得出，不要把它作为一个 state，而是在渲染期间直接计算这个值。**
+
+```jsx
+function Form() {
+  const [firstName, setFirstName] = useState('Taylor');
+  const [lastName, setLastName] = useState('Swift');
+
+  // 🔴 避免：多余的 state 和不必要的 Effect
+  // const [fullName, setFullName] = useState('');
+  // useEffect(() => {
+  //   setFullName(firstName + ' ' + lastName);
+  // }, [firstName, lastName]);
+  // ...
+  // ✅ 非常好：在渲染期间进行计算
+  const fullName = firstName + ' ' + lastName;
+}
+```
+
+**如果 useEffect 的作用是，在 state1 变化之后，通过 state1 计算得到 state2 再触发页面渲染，那么可以将 state2 替换成 const
+定义的常量.**
+
+```jsx
+function TodoList({ todos, filter }) {
+  const [newTodo, setNewTodo] = useState('');
+
+  // 🔴 避免：多余的 state 和不必要的 Effect
+  // const [visibleTodos, setVisibleTodos] = useState([]);
+  // useEffect(() => {
+  //   setVisibleTodos(getFilteredTodos(todos, filter));
+  // }, [todos, filter]);
+  // ✅ 如果 getFilteredTodos() 的耗时不长，这样写就可以了。
+  const visibleTodos = getFilteredTodos(todos, filter);
+}
+```
