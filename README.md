@@ -1631,11 +1631,11 @@ function Playground() {
 
 没有必要使用 Effect 的两种情况
 
-- 不必使用 Effect 来转换渲染所需的数据。
+- **不必使用 Effect 来转换渲染所需的数据。**
     - （想在展示一个列表前先做筛选）如显示的数据需要通过转换 state 得到，如果把转换逻辑写到 useEffect 中，就会导致页面渲染 2
       次。（state 变化后，页面会渲染一次，页面渲染好后，会执行 effect ，如果在 effect 中修改了 state， 那么这个页面会再次渲染页面
       **useEffect 本身不会导致页面重新渲染**）
-- 不必使用 Effect 来处理用户事件。
+- **不必使用 Effect 来处理用户事件。**
     - 在 effect 中执行不允许重复的事情，如发送 `/api/buy` 请求. 在严格模式下，会导致请求 2 次。 （虽然生产环境只会执行一次，但是还是不要在
       effect 中执行不允许重复执行的操作） **useEffect 最好是一个纯函数**
 
@@ -1676,5 +1676,48 @@ function TodoList({ todos, filter }) {
   // }, [todos, filter]);
   // ✅ 如果 getFilteredTodos() 的耗时不长，这样写就可以了。
   const visibleTodos = getFilteredTodos(todos, filter);
+}
+```
+
+对于昂贵的计算，可以考虑使用 `useMemo` 来缓存计算结果。
+
+```jsx
+const visibleTodos = useMemo(
+  () => getFilteredTodos(todos, filter),
+  // deps array , 只有当 todos， filter 变化时，才会重新执行传入的函数
+  [todos, filter]
+);
+```
+
+`useMemo` 不会让第一次渲染变得更快。
+
+react 组件内部使用 useEffect 来根据 props 参数，来修改内部的 state。这个 useEffect 可以通过在组件上添加 key 来避免。
+
+```jsx
+export default function ProfilePage({ userId }) {
+  const [comment, setComment] = useState('');
+
+  // 🔴 避免：当 prop 变化时，在 Effect 中重置 state
+  useEffect(() => {
+    setComment('');
+  }, [userId]);
+  // ...
+}
+```
+
+```jsx
+export default function ProfilePage({ userId }) {
+  return (
+    <Profile
+      userId={userId}
+      key={userId}
+    />
+  );
+}
+
+function Profile({ userId }) {
+  // ✅ 当 key 变化时，该组件内的 comment 或其他 state 会自动被重置
+  const [comment, setComment] = useState('');
+  // ...
 }
 ```
