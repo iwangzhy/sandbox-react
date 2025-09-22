@@ -1721,3 +1721,27 @@ function Profile({ userId }) {
   // ...
 }
 ```
+
+## React Router
+
+安装 react-router-dom
+
+```shell
+npm i react-router-dom
+```
+
+### 组件
+
+- 模式
+    - HashRouter
+    - BrowserRouter
+- Routes 组件
+- Route 组件
+
+### React Router 问题
+
+```
+[Layout] is not a <Route> component. All component children of <Routes>
+```
+
+Routes 组件的子组件需要是 Route 组件或者 React.Fragment 组件
