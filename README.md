@@ -1745,3 +1745,22 @@ npm i react-router-dom
 ```
 
 Routes 组件的子组件需要是 Route 组件或者 React.Fragment 组件
+
+## Redux
+
+[https://cn.redux.js.org/](https://cn.redux.js.org/)
+
+```shell
+npm i redux
+npm i react-redux
+npm i redux-devtools -D
+```
+
+- 包含全局状态的单一仓库
+- 当应用中发生某些事情时，分发普通对象(plain object) 动作(action)给仓库
+- Pure reducer 函数查看这些动作(action)并且返回不可更新的状态。
+
+- createStore 创建一个 Redux 实例
+- combineReduces 将多个 reducer 函数合并成一个更大的 reducer 函数
+- applyMiddleware 将多个中间件组合成一个 store 增强器
+- compose 将多个 store 增强器合并成一个单一的 store 增强器
